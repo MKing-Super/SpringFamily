@@ -1,3 +1,0 @@
-This is my first submission.
-Git is a version control system.
-Git is free software.
