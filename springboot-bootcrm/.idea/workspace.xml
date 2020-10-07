@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c0a6f12b-3b91-4762-8245-892c4f96de6d" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="mapper" />
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="ProjectId" id="1iUDd86nHIs0TNxbd93DrBmsOSF" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources/static/js" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="copyright" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\static\js" />
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\templates\emp" />
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\templates" />
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\templates\error" />
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\templates\common" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.mk.mapper" />
+      <recent name="com.mk.controller" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\java\com\mk\config" />
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\templates" />
+      <recent name="E:\JavaStudy\SpringBoot_IdeaProjects\springboot-bootcrm\src\main\resources\mybatis\mapper" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.SpringbootBootcrmApplication">
+    <configuration name="SpringbootBootcrmApplicationTests.contextLoads" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="springboot-bootcrm" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.mk.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.mk" />
+      <option name="MAIN_CLASS_NAME" value="com.mk.SpringbootBootcrmApplicationTests" />
+      <option name="METHOD_NAME" value="contextLoads" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="SpringbootBootcrmApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="springboot-bootcrm" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.mk.SpringbootBootcrmApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.SpringbootBootcrmApplicationTests.contextLoads" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c0a6f12b-3b91-4762-8245-892c4f96de6d" name="Default Changelist" comment="" />
+      <created>1601953361279</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1601953361279</updated>
+      <workItem from="1601953366581" duration="5591000" />
+      <workItem from="1601962876104" duration="18149000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="574" y="120" key="#com.intellij.ide.util.MemberChooser" timestamp="1601978528754">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="574" y="120" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1601978528754" />
+    <state width="1493" height="237" key="GridCell.Tab.0.bottom" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.0.center" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.0.left" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.0.right" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.1.bottom" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.1.center" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.1.left" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state width="1493" height="237" key="GridCell.Tab.1.right" timestamp="1601981921618">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state width="1493" height="237" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1601981921618" />
+    <state x="430" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1601966243469">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="430" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1601966243469" />
+  </component>
+</project>

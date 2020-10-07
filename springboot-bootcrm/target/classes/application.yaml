@@ -1,0 +1,9 @@
+#关闭thymeleaf引擎的缓存
+spring:
+  thymeleaf:
+    cache: false
+  #时间格式
+  mvc:
+    format:
+      date: yyyy-MM-dd
+
