@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mk.dao.UserProductModelDataDao">
+    <!--  //向t_user_product_model_data表添加所选商品的详细信息  -->
+    <insert id="addUserProductModelData" parameterType="UserProductModelData">
+        INSERT INTO t_user_product_model_data(userid,productid,modelid,modeldataid)
+        VALUES(#{userid},#{productid},#{modelid},#{modeldataid})
+    </insert>
+    <!--  //删除所选商品的详细信息  -->
+    <delete id="deleteUserProductModelData" parameterType="Integer">
+        delete from t_user_product_model_data where productid=#{productid}
+    </delete>
+</mapper>
