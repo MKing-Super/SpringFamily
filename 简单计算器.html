@@ -1,0 +1,129 @@
+<html>
+	<head>
+		<title>计算器</title>
+	</head>
+	<script type="text/javascript">
+		//一、设置全局变量
+		//正则0-9数字
+		var numberExp = /^[0-9]$/;
+		//正则+-*/运算符
+		var operationExp = /^[\+\-\*\/]$/;
+		//输入产生的字符串
+		var str = 0;
+		//是否为运算后的结果
+		var isResult = false;
+		
+		//二、函数
+		//鼠标按下
+		function mouseDown(key){
+			//获取显示器对象
+			var monitor = document.getElementById("monitor");
+			//修改按键的背景颜色
+			key.style.background = "#FFE384";
+			//获取按键标签里面的值
+			var val = key.innerHTML;
+			if(numberExp.test(val)){	//是否为数字
+				//判断显示器上的数字是否为上一次运算的结果
+				//若是，则将str清空
+				if(isResult==true){
+					str = 0;
+					isResult = false;
+				}
+				if(str==0){
+					str = val;
+				}else{
+					str = str + val;
+				}
+				//将字符串写入标签
+				monitor.innerHTML = str;
+			}else if(val=='+' || val=='-' || val=='*' || val=='/'){	//是否为加键乘除
+				if( operationExp.test(str.charAt(str.length-1)) ){
+					str = str;
+				}else{
+					str = str + val;
+					//在上一次结果的基础上进行运算
+					isResult = false;
+				}
+				//将字符串写入标签
+				monitor.innerHTML = str;
+			}else if(val == '='){
+				//将字符串里内容进行四则运算，获取结果
+				str = eval(str);
+				//将运算后的结果写入标签
+				monitor.innerHTML = str;
+				//将str由Number类型转化为String类型
+				//目的：防止在将str作为字符串进行判断时出现错误
+				//如：加键乘除、删除字符串的最后一位的判断
+				str = String(str);
+				//alert(typeof str);
+				isResult = true;
+			}else if(val == 'C'){
+				//字符串置零
+				str = 0;
+				monitor.innerHTML = "";
+			}else if(val == 'del'){
+				//删除字符串的最后一位
+				str = str.substr(0,str.length-1);
+				monitor.innerHTML = str;
+			}
+		}
+		//鼠标松开
+		function mouseUp(key){
+			//修改按键的背景颜色
+			key.style.background = "#F0FFFF";
+		}
+	</script>
+	<style>
+		table{
+			background-color:#F0FFFF;
+			width:405px;
+			height:607px;
+		}
+		td{
+			width:100px;
+			height:100px;
+			font-size:30px;
+			text-align:center;
+		}
+		#monitor{
+			text-align:right;
+			background-color:#F0FFF0;
+		}
+		
+	</style>
+	<body>
+		<table border="1px" align="center">
+			<caption><h3>计算器</h3></caption>
+			<tr>
+				<td colspan="4" id="monitor"></td>
+			</tr>
+			<tr>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">+</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">-</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">*</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">/</td>
+			</tr>
+			<tr>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">7</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">8</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">9</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">C</td>
+			</tr>
+			<tr>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">4</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">5</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">6</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">del</td>
+			</tr>
+			<tr>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">1</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">2</td>
+				<td onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">3</td>
+				<td rowspan="2" onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">=</td>
+			</tr>
+			<tr>
+				<td colspan="3" id="zero" onmousedown="mouseDown(this)" onmouseup="mouseUp(this)">0</td>
+			</tr>
+		</table>
+	</body>
+</html>
