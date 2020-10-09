@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
 		<meta name="author" content="">
-		<title>Signin Template for Bootstrap</title>
+		<title>登陆页面</title>
 		<!-- Bootstrap core CSS -->
 		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 		<!-- Custom styles for this template -->
@@ -19,9 +19,9 @@
 
 			<p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
 
-			<label class="sr-only">账号</label>
+			账号
 			<input type="text" name="user_code" class="form-control" required="" autofocus="">
-			<label class="sr-only" >密码</label>
+			密码
 			<input type="password" name="user_password" class="form-control" required="">
 			<div class="checkbox mb-3">
 				<label>

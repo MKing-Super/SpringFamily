@@ -19,7 +19,7 @@ public class MyMvcConfig implements WebMvcConfigurer {
         //设置拦截器，不去拦截登陆页面和静态资源
         registry.addInterceptor(new LoginHandlerInterceptor())
                 .addPathPatterns("/**")
-                .excludePathPatterns("/","/index.html","/sysuser/login","/sysuser/test",
+                .excludePathPatterns("/","/index.html","/sysuser/login","/sysuser/test","/sysuser/test",
                         "/css/**","/js/**","/img/**");
     }
 }

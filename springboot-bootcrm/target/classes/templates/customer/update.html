@@ -8,7 +8,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 
-	<title>Dashboard Template for Bootstrap</title>
+	<title>用户更新</title>
 	<!-- Bootstrap core CSS -->
 	<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
@@ -62,7 +62,6 @@
 				<div class="form-group">
 					<label>客户信息来源</label>
 					<select name="cust_source" id="cust_source" class="form-control">
-						<option value="">用户名来源</option>
 						<option th:selected="${customer.getCust_source()=='6'}" value="6">电话营销</option>
 						<option th:selected="${customer.getCust_source()=='7'}" value="7">网络营销</option>
 					</select>
@@ -70,7 +69,6 @@
 				<div class="form-group">
 					<label>客户所属行业</label>
 					<select  name="cust_industry" id="cust_industry" class="form-control">
-						<option value="">用户行业</option>
 						<option th:selected="${customer.getCust_industry()=='1'}" value="1">教育培训 </option>
 						<option th:selected="${customer.getCust_industry()=='2'}" value="2">电子商务</option>
 						<option th:selected="${customer.getCust_industry()=='3'}" value="3">对外贸易</option>
@@ -81,7 +79,6 @@
 				<div class="form-group">
 					<label>客户等级</label>
 					<select name="cust_level" id="cust_level" class="form-control">
-						<option value="">用户等级</option>
 						<option th:selected="${customer.getCust_level()=='22'}" value="22">普通客户</option>
 						<option th:selected="${customer.getCust_level()=='23'}" value="23">VIP客户</option>
 					</select>
