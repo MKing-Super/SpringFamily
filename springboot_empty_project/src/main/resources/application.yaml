@@ -1,0 +1,31 @@
+spring:
+  #数据库
+  datasource:
+    username: root
+    password: 123456
+    url: jdbc:mysql://localhost:3306/used_car_market?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  #整合thymeleaf
+  thymeleaf:
+    prefix: classpath:/templates/
+    check-template-location: true
+    suffix: .html
+    encoding: UTF-8
+    servlet:
+      content-type: text/html
+    mode: HTML5
+    cache: false
+  mvc:
+    format:
+      date: yyyy-MM-dd
+
+#整合mybatis-plus
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.mkinfo.carhouse.po
+
+#端口
+server:
+  port: 9090
