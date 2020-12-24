@@ -1,0 +1,305 @@
+<html>
+<head>
+	<title>完整表单</title>
+</head>
+<style>
+#first{
+	text-align:right;
+	width:80px;
+}
+#second{
+	width:180px;
+}
+table{
+	background-color:pink;
+	width:600px;
+	height:300px;
+}
+</style>
+<script type="text/javascript">
+//失去焦点，检查用户名
+function checkUserName(userName1) {
+	//定义返回值，用于提交时重新检验
+	var nameIdOk = true; 
+	//去除用户名前后的空格
+	var userName = userName1.value.trim();
+	//得到提示（span标签）的对象
+	var span = document.getElementById("userNameErrorMsg");
+	if(userName==null | userName==""){	//用户名为空
+		span.innerHTML = "<font color='red'>对不起，用户名不能为空！</font>";
+		//修改返回值，不符合格式
+		nameIdOk = false;
+	}else if(userName.length<6 | userName.length>12){	//用户名不符合格式		
+		span.innerHTML = "<font color='red'>对不起，用户名长度必须在6-12位之间！</font>";
+		//修改返回值，不符合格式
+		nameIdOk = false;
+	}else{	
+		//用户名符合条件，提示为“符合要求”
+		span.innerHTML = "<font color='green'>符合要求</font>";
+	}
+	//使输入框内显示去除空格后的名称
+	userName1.value = userName;
+	return nameIdOk;
+}
+//获得焦点，清空提示
+function clearUserNameErrMsg() {
+	//得到span标签的对象
+	var span = document.getElementById("userNameErrorMsg");	
+	//令span便签为空
+	span.innerHTML = "";
+}
+
+
+//失去焦点
+function checkPassword(psw1){
+	//定义返回值，用于提交时重新检验
+	var pswIsOk = true;
+	//去除密码前后的空格
+	var psw = psw1.value.trim();
+	//得到提示（span标签）的对象
+	var span = document.getElementById("passwordErrorMsg");
+	if(psw==null | psw==""){	//密码为空
+		span.innerHTML = "<font color='red'>对不起，密码不能为空！</font>";
+		pswIsOk = false;
+	}else if(psw.length<6 | psw.length>12){	//密码不符合格式		
+		span.innerHTML = "<font color='red'>对不起，密码长度必须在6-12位之间！</font>";
+		pswIsOk = false;
+	}else{		
+		//密码符合要求
+		span.innerHTML = "<font color='green'>符合要求</font>";
+	}
+	//使文本框里显示去除空格后的密码
+	psw1.value = psw;
+	return pswIsOk;
+}
+//获得焦点，清空提示
+function clearPasswordErrMsg(){
+	//得到提示（span标签）的对象
+	var span = document.getElementById("passwordErrorMsg");			
+	span.innerHTML = "";
+}
+
+
+//失去焦点
+function checkRePassword(rePsw1){
+	//定义返回值，用于提交时重新检验
+	var rePswIsOk = true;
+	//得到首次输入的密码
+	var psw = document.getElementById("psw").value;
+	//将第二次输入的密码前后去除空格
+	var rePsw = rePsw1.value.trim();
+	//得到提示（span标签）的对象
+	var span = document.getElementById("rePasswordErrorMsg");
+	if(rePsw==null | rePsw==""){	//密码为空
+		span.innerHTML = "<font color='red'>对不起，密码不能为空！</font>";
+		rePswIsOk = false;
+	}else if(rePsw.length<6 | rePsw.length>12){	//密码不符合格式		
+		span.innerHTML = "<font color='red'>对不起，密码长度必须在6-12位之间！</font>";
+		rePswIsOk = false;
+	}else if(rePsw != psw){	//第二次输入的密码与第一次输入的密码的值不相同	
+		span.innerHTML = "<font color='red'>对不起，两次输入密码请保持一致！</font>";
+		rePswIsOk = false;
+	}else{		
+		//符合第二次输入密码的条件
+		span.innerHTML = "<font color='green'>符合要求</font>";
+	}
+	//使文本框里显示去除空格后的密码
+	rePsw1.value = rePsw;
+	return rePswIsOk;
+}
+//获得焦点，清空提示
+function clearRePasswordErrMsg(){
+	//得到提示（span标签）的对象
+	var span = document.getElementById("rePasswordErrorMsg");			
+	span.innerHTML = "";
+}
+
+//失去焦点
+function checkEmail(email) {
+	//定义返回值，用于提交时重新检验
+	var emailIdOk = true;
+	//用于验证电子邮箱的正则表达式
+	var emailExp = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	//得到email输入框里的值
+	email = email.value;
+	//得到提示（span标签）的对象
+	var span = document.getElementById("emailErrorMsg");
+	if(emailExp.test(email)){	//检验输入的值是否符合正则表达式		
+		span.innerHTML = "<font color='green'>该邮箱可以使用！</font>";
+	}else{		
+		//邮箱地址不符合正则表达式
+		span.innerHTML = "<font color='red'>对不起！邮箱格式不正确！</font>";
+		emailIdOk = false;
+	}
+	return emailIdOk;
+}
+//获得焦点，清空提示
+function clearEmail(){
+	//得到提示（span标签）的对象
+	var span = document.getElementById("emailErrorMsg");			
+	span.innerHTML = "";
+}
+
+//失去焦点
+function checkPhone(phone) {
+	//定义返回值，用于提交时重新检验
+	var phoneIsOk = true;
+	//用于验证手机号码的正则表达式
+	var phoneExp = /^1[3456789]\d{9}$/;
+	//得到手机号码的值
+	phone = phone.value;
+	//得到提示（span标签）的对象
+	var span = document.getElementById("phoneErrorMsg");
+	if(phoneExp.test(phone)){	//检验输入的手机号是否符合正则表达式
+		span.innerHTML = "<font color='green'>该手机号可以使用！</font>";
+	}else{	
+		//手机号不符合正则表达式
+		span.innerHTML = "<font color='red'>对不起！手机号位数不正确！</font>";
+		phoneIsOk = false;
+	}
+	return phoneIsOk;
+}
+//获得焦点，清空提示
+function clearPhone(){
+	//得到提示（span标签）的对象
+	var span = document.getElementById("phoneErrorMsg");			
+	span.innerHTML = "";
+}
+
+
+//多选框全选
+function selAll(){
+	//得到爱好的对象，用name属性获取多个值
+	var hobby = document.getElementsByName("hobby");
+	for(var i = 0; i < hobby.length; i++){
+		hobby[i].checked=true;
+	}		
+}
+
+//多选框反选
+function reverse(){
+	//得到爱好的对象，用name属性获取多个值
+	var hobby = document.getElementsByName("hobby");
+	for (var i = 0; i < hobby.length; i++) {
+		if(hobby[i].checked==false){
+			hobby[i].checked=true;
+		}else{
+			hobby[i].checked=false;
+		}
+	}
+}
+
+//提交时重新检查所有的输入框的内容是否符合格式
+function checkAll(){
+	//检验用户名
+	var userName = document.getElementById("user");
+	var nameOk = checkUserName(userName);
+	//检验首次输入的密码
+	var userPsw = document.getElementById("psw");
+	var pswOk = checkPassword(userPsw);
+	//检验再次输入的密码
+	var userRePsw = document.getElementById("rePsw");
+	var rePswOk = checkRePassword(userRePsw);
+	//检验电子邮箱
+	var email = document.getElementById("email");
+	var emailOk = checkEmail(email);
+	//检验手机号码
+	var phone = document.getElementById("phone");
+	var phoneOk = checkPhone(phone);
+	//全部符合条件则进行提交，否则无法提交
+	if(nameOk && pswOk && emailOk && phoneOk && rePswOk){
+		//提交的位置
+		document.forms["myForm"].action="";
+		//提交的方式
+		document.forms["myForm"].method="get"
+		//进行提交
+		document.forms["myForm"].submit();
+	}
+}
+</script>	
+<body>
+	<form name="myForm">
+		<table>
+			<tr>
+				<td id="first">用户名</td>
+				<td id="second">
+					<input type="text" name ="userName"  id="user" onblur="checkUserName(this)"  onfocus="clearUserNameErrMsg()"/>			
+				</td>
+				<td>
+					<span id="userNameErrorMsg"></span>
+				</td>
+			</tr>
+			<tr>
+				<td id="first">密码</td>
+				<td id="second">
+					<input type="password" name ="userPsw"  id="psw" onblur="checkPassword(this)" onfocus="clearPasswordErrMsg()"/>	
+				</td>
+				<td>
+					<span id="passwordErrorMsg"></span>	
+				</td>
+			</tr>
+			<tr>
+				<td id="first">确认密码</td>
+				<td id="second">
+					<input type="password" name ="userPsw"  id="rePsw" onblur="checkRePassword(this)" onfocus="clearRePasswordErrMsg()"/>	
+				</td>
+				<td>
+					<span id="rePasswordErrorMsg"></span>
+				</td>
+			</tr>
+			<tr>
+				<td id="first">性别</td>
+				<td id="second">
+					 <input type="radio" name="sex" value="man" checked/>男
+					 <input type="radio" name="sex" value="woman"/>女
+				</td>
+				<td>
+				
+				</td>
+			</tr>
+			<tr>
+				<td id="first">邮箱</td>
+				<td id="second">
+					<input type="email" name="email" id="email" onblur="checkEmail(this)" onfocus="clearEmail()"/>
+				</td>
+				<td>
+					<span id="emailErrorMsg"></span>
+				</td>
+			</tr>
+			<tr>
+				<td id="first">手机号码</td>
+				<td id="second">
+					<input type="number" name="phone" id="phone" onblur="checkPhone(this)" onfocus="clearPhone()"/>	
+				</td>
+				<td>
+					<span id="phoneErrorMsg"></span>
+				</td>
+			</tr>
+			<tr>
+				<td id="first">爱好</td>
+				<td id="second">
+					<input type="checkbox" name="hobby" value="study"/>学习
+					<input type="checkbox" name="hobby" value="sleep"/>睡觉
+					<input type="checkbox" name="hobby" value="book"/>阅读
+					<br/>&nbsp;&nbsp;&nbsp;
+					<input type="button" value="全选" onclick="selAll()"/>
+					<input type="button" value="反选" onclick="reverse()"/>
+				</td>
+				<td>
+				
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center">
+					<input type="button" value="提交" onclick="checkAll()"/>
+					<input type="reset" value="重置"/>
+				</td>
+				<td>
+				
+				</td>
+			</tr>
+		</table>	
+	</form>
+	
+</body>
+</html>
