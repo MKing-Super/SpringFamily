@@ -43,7 +43,7 @@
         
         
 
-    })
+    });
 
     //删除一条信息
     function deletemsg(del) {
