@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html lang="en_US" xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<meta name="description" content="">
-		<meta name="author" content="">
-		<title>登陆页面</title>
-		<!-- Bootstrap core CSS -->
-		<link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
-		<!-- Custom styles for this template -->
-		<link th:href="@{/css/signin.css}" rel="stylesheet">
-	</head>
+<head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <title>登陆页面</title>
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" th:href="@{/css/signin.css}">
+</head>
 
-	<body class="text-center">
-		<form class="form-signin" th:action="@{/sysuser/login}">
-			<img class="mb-4" th:src="@{/img/bootstrap-solid.svg}" alt="" width="72" height="72">
-			<h1 class="h3 mb-3 font-weight-normal">请登录</h1>
+<body class="text-center">
+<form class="form-signin" th:action="@{/sysuser/login}">
+    <img alt="" class="mb-4" height="72" th:src="@{/img/bootstrap-solid.svg}" width="72">
+    <h1 class="h3 mb-3 font-weight-normal">请登录</h1>
 
-			<p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}"></p>
+    <p style="color: red" th:if="${not #strings.isEmpty(msg)}" th:text="${msg}"></p>
 
-			账号
-			<input type="text" name="user_code" class="form-control" required="" autofocus="">
-			密码
-			<input type="password" name="user_password" class="form-control" required="">
-			<div class="checkbox mb-3">
-				<label>
-          <input type="checkbox" value="remember-me" >记住我
+    账号
+    <input autofocus="" class="form-control" name="user_code" required="" type="text">
+    密码
+    <input class="form-control" name="user_password" required="" type="password">
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" value="remember-me">记住我
         </label>
-			</div>
-			<button class="btn btn-lg btn-primary btn-block" type="submit" >登陆</button>
-			<p class="mt-5 mb-3 text-muted">© 2019-2020</p>
-		</form>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block" type="submit">登陆</button>
+    <p class="mt-5 mb-3 text-muted">© 2019-2020</p>
+</form>
 
-	</body>
+</body>
 
 </html>
