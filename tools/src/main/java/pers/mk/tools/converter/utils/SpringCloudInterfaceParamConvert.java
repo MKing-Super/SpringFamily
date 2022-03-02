@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date: 2022/3/2 16:49
  */
 @Controller
-@RequestMapping("/SpringCloudInterfaceParamConvert")
+@RequestMapping("SpringCloudInterfaceParamConvert")
 public class SpringCloudInterfaceParamConvert {
 
     @GetMapping("/index")
@@ -27,7 +27,7 @@ public class SpringCloudInterfaceParamConvert {
                 suf = methodName.substring(1, length);
             }else {
                 model.addAttribute("result","接口方法名称错误！！！");
-                return "/index";
+                return "index";
             }
             result = className + pre + suf + suffix;
             model.addAttribute("result",result);
@@ -38,7 +38,8 @@ public class SpringCloudInterfaceParamConvert {
         }catch (Exception e){
             model.addAttribute("result","后台报错了！请检查输入的值！！！");
             model.addAttribute("interfaceResult","后台报错了！请检查输入的值！！！");
+            return "index";
         }
-        return "/index";
+        return "index";
     }
 }
