@@ -15,25 +15,31 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class SpringCloudInterfaceParamConvert {
 
     @GetMapping("/index")
-    public String index(String className, String methodName, String suffix,String feignSuffix, Model model){
+    public String index(String oldServiceName,String feignServiceSuffix,
+                        String className, String interfaceMethodName, String interfaceMethodSuffix,
+                        String feignSuffix,
+                        Model model){
         try {
+            //新建feignService服务接口类名称
+            String feignServiceResult = oldServiceName + feignServiceSuffix;
+            model.addAttribute("feignServiceResult",feignServiceResult);
+
             //新实体类名
-            String pre;
-            String suf;
             String result;
-            int length = methodName.length();
+            int length = interfaceMethodName.length();
             if (length > 1){
-                pre = methodName.substring(0, 1).toUpperCase();
-                suf = methodName.substring(1, length);
+                String pre = interfaceMethodName.substring(0, 1).toUpperCase();
+                String suf = interfaceMethodName.substring(1, length);
+                result = className + pre + suf + interfaceMethodSuffix;
             }else {
                 model.addAttribute("result","接口方法名称错误！！！");
+                model.addAttribute("interfaceResult","请检查输入的值！！！");
                 return "index";
             }
-            result = className + pre + suf + suffix;
             model.addAttribute("result",result);
 
             //新接口方法名
-            String interfaceResult = methodName + feignSuffix;
+            String interfaceResult = interfaceMethodName + feignSuffix;
             model.addAttribute("interfaceResult",interfaceResult);
         }catch (Exception e){
             model.addAttribute("result","后台报错了！请检查输入的值！！！");
