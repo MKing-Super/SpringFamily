@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>welcome~</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<div>
+    <form action="/SpringCloudInterfaceParamConvert/index" method="get">
+        <table border="1px;">
+            <tr>
+                <td colspan="2">
+                    SpringCloud的实体类名称转换：
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    实体类名称
+                </td>
+                <td>
+                    <input type="text" name="className" required="required" autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    接口方法名称
+                </td>
+                <td>
+                    <input type="text" name="methodName" required="required" autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    后缀
+                </td>
+                <td>
+                    <input type="text" name="suffix" required="required" value="Wrapper" autocomplete="off">
+                </td>
+            </tr>
+
+
+            <tr>
+                <td colspan="2">
+                    SpringCloud的接口方法名称转换：
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    后缀
+                </td>
+                <td>
+                    <input type="text" name="feignSuffix" required="required" value="Feign" autocomplete="off">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <input type="submit" style="width: 200px;height: 70px;" value="转换">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+标准SpringCloud的实体类名称：<br/>
+<input type="text" th:value="${result}" style="width: 500px;"><br/>
+标准SpringCloud的接口方法名称：<br/>
+<input type="text" th:value="${interfaceResult}" style="width: 500px;">
+<hr/>
+
+
+<script type="text/javascript">
+    $(function(){
+
+    });
+</script>
+</body>
+</html>
