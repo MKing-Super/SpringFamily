@@ -22,18 +22,28 @@ public class SpringCloudInterfaceParamConvert {
         try {
             //新建feignService服务接口类名称
             String feignServiceResult = oldServiceName + feignServiceSuffix;
-            model.addAttribute("feignServiceResult",feignServiceResult);
-
+            model.addAttribute("feignServiceResult",oldServiceName == ""?"":feignServiceResult);
+            int length = interfaceMethodName.length();
+            int length1 = oldServiceName.length();
+            String path;
+            if (length1 > 1){
+                String pre = oldServiceName.substring(0, 1).toLowerCase();
+                String suf = oldServiceName.substring(1, length1);
+                path = pre + suf;
+                model.addAttribute("path",path);
+            }else {
+                model.addAttribute("result","");
+                model.addAttribute("interfaceResult","");
+            }
             //新实体类名
             String result;
-            int length = interfaceMethodName.length();
             if (length > 1){
                 String pre = interfaceMethodName.substring(0, 1).toUpperCase();
                 String suf = interfaceMethodName.substring(1, length);
                 result = className + pre + suf + interfaceMethodSuffix;
             }else {
-                model.addAttribute("result","接口方法名称错误！！！");
-                model.addAttribute("interfaceResult","请检查输入的值！！！");
+                model.addAttribute("result","");
+                model.addAttribute("interfaceResult","");
                 return "index";
             }
             model.addAttribute("result",result);

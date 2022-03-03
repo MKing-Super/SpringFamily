@@ -7,7 +7,7 @@
 </head>
 <body>
 
-<div>
+<div style="float: left;">
     <form action="/SpringCloudInterfaceParamConvert/index" method="get">
         <table border="2px;">
             <tr>
@@ -20,7 +20,7 @@
                     原接口名称
                 </td>
                 <td>
-                    <input type="text" name="oldServiceName" required="required" autocomplete="off">
+                    <input type="text" name="oldServiceName" autocomplete="off">
                 </td>
             </tr>
             <tr>
@@ -28,7 +28,7 @@
                     后缀
                 </td>
                 <td>
-                    <input type="text" name="feignServiceSuffix" value="FeignClient" required="required" autocomplete="off">
+                    <input type="text" name="feignServiceSuffix" value="FeignClient" required="required" autocomplete="off" >
                 </td>
             </tr>
 
@@ -78,20 +78,66 @@
 
             <tr>
                 <td colspan="2">
-                    <input type="submit" style="width: 100%;height: 70px;background-color: pink " value="转换">
+                    <input type="submit" style="width: 77%;height: 70px;background-color: pink " value="转换">
+                    <input type="reset" style="width: 20%;height: 70px;background-color: darkgreen " value="重置">
                 </td>
             </tr>
         </table>
     </form>
 </div>
-<p>>=========↓↓↓↓↓↓=========<</p>
-标准feignService接口类名称：<br/>
-<input type="text" th:value="${feignServiceResult}" style="width: 500px;"><br/>
-标准SpringCloud的实体类名称：<br/>
-<input type="text" th:value="${result}" style="width: 500px;"><br/>
-标准SpringCloud的接口方法名称：<br/>
-<input type="text" th:value="${interfaceResult}" style="width: 500px;">
+
+<br/>
+<div>
+    <p>>=========↓↓↓↓↓↓=========<</p>
+    标准feignService接口类名称：<br/>
+    <input type="text" th:value="${feignServiceResult}" style="width: 500px;"><br/>
+    标准path名称：<br/>
+    <input type="text" th:value="${path}" style="width: 500px;"><br/>
+    标准SpringCloud的实体类名称：<br/>
+    <input type="text" th:value="${result}" style="width: 500px;"><br/>
+    标准SpringCloud的接口方法名称：<br/>
+    <input type="text" th:value="${interfaceResult}" style="width: 500px;">
+</div>
 <hr/>
+<div style="float: left;width: auto">
+    <table>
+        <tr>
+            <th>
+                常用字段
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" value='@RequestMapping(value = "/xxx",method = RequestMethod.xxx) ' style="width: 500px;" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" value='@RequestParam("xxx") ' style="width: 500px;" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" value="@RequestBody " style="width: 500px;" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" value="@RestController " style="width: 500px;" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" value='@RequestMapping("/cms/xxxxxx") ' style="width: 500px;" disabled>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea style="width: 500px;" disabled>@com.alibaba.dubbo.config.annotation.Service(version="1.0.0", interfaceClass= xxxxxxx.class)</textarea>
+            </td>
+        </tr>
+    </table>
+</div>
 
 
 <script type="text/javascript">
