@@ -20,7 +20,7 @@ public class SpringCloudInterfaceParamConvert {
                         String feignSuffix,
                         Model model){
         try {
-            //新建feignService服务接口类名称
+            //标准feignService接口类名称：
             String feignServiceResult = oldServiceName + feignServiceSuffix;
             model.addAttribute("feignServiceResult",oldServiceName == ""?"":feignServiceResult);
             int length = interfaceMethodName.length();
@@ -30,25 +30,26 @@ public class SpringCloudInterfaceParamConvert {
                 String pre = oldServiceName.substring(0, 1).toLowerCase();
                 String suf = oldServiceName.substring(1, length1);
                 path = pre + suf;
+                //标准path名称：
                 model.addAttribute("path",path);
             }else {
                 model.addAttribute("result","");
                 model.addAttribute("interfaceResult","");
             }
-            //新实体类名
+
+            //标准SpringCloud的实体类名称：
             String result;
-            if (length > 1){
+            if (length > 1 && className != null && !"".equals(className)){
                 String pre = interfaceMethodName.substring(0, 1).toUpperCase();
                 String suf = interfaceMethodName.substring(1, length);
                 result = className + pre + suf + interfaceMethodSuffix;
+                model.addAttribute("result",result);
             }else {
                 model.addAttribute("result","");
-                model.addAttribute("interfaceResult","");
-                return "index";
             }
-            model.addAttribute("result",result);
 
-            //新接口方法名
+
+            //标准SpringCloud的接口方法名称：
             String interfaceResult = interfaceMethodName + feignSuffix;
             model.addAttribute("interfaceResult",interfaceResult);
         }catch (Exception e){
