@@ -50,8 +50,13 @@ public class SpringCloudInterfaceParamConvert {
 
 
             //标准SpringCloud的接口方法名称：
-            String interfaceResult = interfaceMethodName + feignSuffix;
-            model.addAttribute("interfaceResult",interfaceResult);
+            if (interfaceMethodName != null && !"".equals(interfaceMethodName)){
+                String interfaceResult = interfaceMethodName + feignSuffix;
+                model.addAttribute("interfaceResult",interfaceResult);
+            }else {
+                model.addAttribute("interfaceResult","");
+            }
+
         }catch (Exception e){
             model.addAttribute("result","后台报错了！请检查输入的值！！！");
             model.addAttribute("interfaceResult","后台报错了！请检查输入的值！！！");

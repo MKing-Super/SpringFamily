@@ -79,27 +79,61 @@
             <tr>
                 <td colspan="2">
                     <input type="submit" style="width: 77%;height: 70px;background-color: pink " value="转换">
-                    <input type="reset" style="width: 20%;height: 70px;background-color: darkgreen " value="重置">
+                    <input type="reset" style="width: 20%;height: 70px;background-color: bisque " value="重置">
                 </td>
             </tr>
         </table>
     </form>
 </div>
 
-<br/>
-<div style="width: auto">
-    标准feignService接口类名称：<br/>
-    <input type="text" th:value="${feignServiceResult}" style="width: 500px;"><br/>
-    标准path名称：<br/>
-    <input type="text" th:value="${path}" style="width: 500px;"><br/>
-    标准SpringCloud的实体类名称：<br/>
-    <input type="text" th:value="${result}" style="width: 500px;"><br/>
-    标准SpringCloud的接口方法名称：<br/>
-    <input type="text" th:value="${interfaceResult}" style="width: 500px;">
-</div>
 <hr/>
-<div style="float: top;width: auto">
-    <table>
+
+<table border="1px;" style="width: 460px;margin: 0!important;">
+        <tr>
+            <th>
+                标准feignService接口类名称：
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz0" th:value="${feignServiceResult}" style="width: 97%;" onclick="copybz0()">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                标准path名称
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz1" th:value="${path}" style="width: 97%;" onclick="copybz1()">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                标准SpringCloud的实体类名称
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz2" th:value="${result}" style="width: 97%;" onclick="copybz2()">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                标准SpringCloud的接口方法名称
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz3" th:value="${interfaceResult}" style="width: 97%;" onclick="copybz3()">
+            </td>
+        </tr>
+
+
         <tr>
             <th>
                 常用字段
@@ -107,39 +141,81 @@
         </tr>
         <tr>
             <td>
-                <input type="text" value='@RequestMapping(value = "/xxx",method = RequestMethod.xxx) ' style="width: 500px;" disabled>
+                <input type="text" id="cy0" value='@RequestMapping(value = "/xxx",method = RequestMethod.xxx)' style="width: 97%;" onclick="copycy0()">
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" value='@RequestParam("xxx") ' style="width: 500px;" disabled>
+                <input type="text" value="@RestController" id="cy1" style="width: 97%;" onclick="copycy1()">
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" value="@RequestBody " style="width: 500px;" disabled>
+                <input type="text" id="cy2" value='@RequestMapping("/cms/xxxxxx")' style="width: 97%;" onclick="copycy2()">
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" value="@RestController " style="width: 500px;" disabled>
+                <textarea id="cy3" onclick="copycy3()" style="width: 470px;">@com.alibaba.dubbo.config.annotation.Service(version="1.0.0", interfaceClass= xxxxxxx.class)</textarea>
             </td>
         </tr>
         <tr>
             <td>
-                <input type="text" value='@RequestMapping("/cms/xxxxxx") ' style="width: 500px;" disabled>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <textarea style="width: 500px;" disabled>@com.alibaba.dubbo.config.annotation.Service(version="1.0.0", interfaceClass= xxxxxxx.class)</textarea>
+                <input id="cy4" onclick="copycy4()" style="width: 470px;" value='@FeignClient(name="zuul-service", path="/biz-cms-service/cms/xxx")'/>
             </td>
         </tr>
     </table>
-</div>
+
 
 
 <script type="text/javascript">
+    function copybz0(){
+        var oInput = document.getElementById("bz0");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copybz1(){
+        var oInput = document.getElementById("bz1");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copybz2(){
+        var oInput = document.getElementById("bz2");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copybz3(){
+        var oInput = document.getElementById("bz3");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+
+    function copycy0(){
+        var oInput = document.getElementById("cy0");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy1(){
+        var oInput = document.getElementById("cy1");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy2(){
+        var oInput = document.getElementById("cy2");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy3(){
+        var oInput = document.getElementById("cy3");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy4(){
+        var oInput = document.getElementById("cy4");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+
     $(function(){
 
     });
