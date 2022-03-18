@@ -8,12 +8,13 @@
 <body>
 
 <div>
-    <form action="/SpringCloudInterfaceParamConvert/index" method="get">
+    <form method="get">
+        <input type="text" id="custom" name="custom" th:value="${custom}" hidden>
         <table border="2px;">
             <tr>
-                <td colspan="2">
-                    <h4>新建feignService接口类名称转换：</h4>
-                </td>
+                <th colspan="2">
+                    新建feignService接口类名称转换：
+                </th>
             </tr>
             <tr>
                 <td>
@@ -33,9 +34,9 @@
             </tr>
 
             <tr>
-                <td colspan="2">
-                    <h4>SpringCloud的实体类名称转换：</h4>
-                </td>
+                <th colspan="2">
+                    SpringCloud的实体类名称转换：
+                </th>
             </tr>
             <tr>
                 <td>
@@ -63,9 +64,9 @@
             </tr>
 
             <tr>
-                <td colspan="2">
-                    <h4>SpringCloud的接口方法名称转换：</h4>
-                </td>
+                <th colspan="2">
+                    SpringCloud的接口方法名称转换：
+                </th>
             </tr>
             <tr>
                 <td>
@@ -78,7 +79,7 @@
 
             <tr>
                 <td colspan="2">
-                    <input type="submit" style="width: 77%;height: 70px;background-color: pink " value="转换">
+                    <input type="submit" style="width: 77%;height: 70px;background-color: pink " value="转换" onclick="sub(this)">
                     <input type="reset" style="width: 20%;height: 70px;background-color: bisque " value="重置">
                 </td>
             </tr>
@@ -151,17 +152,18 @@
         </tr>
         <tr>
             <td>
-                <input type="text" id="cy2" value='@RequestMapping("/cms/xxxxxx")' style="width: 97%;" onclick="copycy2()">
+                <input type="text" id="cy2" style="width: 97%;" onclick="copycy2()">
             </td>
         </tr>
         <tr>
             <td>
-                <textarea id="cy3" onclick="copycy3()" style="width: 470px;">@com.alibaba.dubbo.config.annotation.Service(version="1.0.0", interfaceClass= xxxxxxx.class)</textarea>
+                <textarea id="cy3" onclick="copycy3()" style="width: 470px;">@com.alibaba.dubbo.config.annotation.Service(version="1.0.0", interfaceClass= xxxxxxx.class)
+                </textarea>
             </td>
         </tr>
         <tr>
             <td>
-                <input id="cy4" onclick="copycy4()" style="width: 470px;" value='@FeignClient(name="zuul-service", path="/biz-cms-service/cms/xxx")'/>
+                <input id="cy4" onclick="copycy4()" style="width: 470px;"/>
             </td>
         </tr>
     </table>
@@ -169,6 +171,21 @@
 
 
 <script type="text/javascript">
+    window.onload = function () {
+        var custom = document.getElementById('custom').value;
+        if (custom !== ''){
+            var cy2 = document.getElementById('cy2');
+            var cy4 = document.getElementById('cy4');
+            cy2.value = '@RequestMapping("/' + custom + '/xxxxxx")';
+            cy4.value = '@FeignClient(name="zuul-service", path="/biz-' + custom +'-service/' + custom + '/xxxxxx")';
+        }
+    }
+
+    function sub(data) {
+        var custom = document.getElementById('custom');
+        var val = custom.value;
+        data.form.action = '/' + val;
+    }
     function copybz0(){
         var oInput = document.getElementById("bz0");
         oInput.select();

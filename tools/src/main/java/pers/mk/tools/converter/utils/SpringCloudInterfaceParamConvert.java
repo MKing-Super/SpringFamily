@@ -3,6 +3,7 @@ package pers.mk.tools.converter.utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -11,14 +12,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @Date: 2022/3/2 16:49
  */
 @Controller
-@RequestMapping("SpringCloudInterfaceParamConvert")
 public class SpringCloudInterfaceParamConvert {
 
-    @GetMapping("/index")
-    public String index(String oldServiceName,String feignServiceSuffix,
+    @GetMapping("/{custom}")
+    public String index(@PathVariable("custom") String custom,
+                        String oldServiceName,String feignServiceSuffix,
                         String className, String interfaceMethodName, String interfaceMethodSuffix,
                         String feignSuffix,
-                        Model model){
+                        Model model)
+    {
+        model.addAttribute("custom",custom);
         try {
             //标准feignService接口类名称：
             String feignServiceResult = oldServiceName + feignServiceSuffix;
@@ -58,8 +61,10 @@ public class SpringCloudInterfaceParamConvert {
             }
 
         }catch (Exception e){
-            model.addAttribute("result","后台报错了！请检查输入的值！！！");
-            model.addAttribute("interfaceResult","后台报错了！请检查输入的值！！！");
+            model.addAttribute("feignServiceResult","请检查输入的值！！！");
+            model.addAttribute("path","请检查输入的值！！！");
+            model.addAttribute("result","请检查输入的值！！！");
+            model.addAttribute("interfaceResult","请检查输入的值！！！");
             return "index";
         }
         return "index";
