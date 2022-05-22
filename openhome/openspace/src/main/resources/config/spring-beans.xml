@@ -20,6 +20,15 @@
         <property name="password" value="123"/>
     </bean>
 
+    <!-- 可能的原因：mapper文件夹在jar包中不能找到 -->
+<!--    <bean id="mkFileSystemResource" class="org.springframework.core.io.FileSystemResource">-->
+<!--        <constructor-arg type="java.io.File" value="classpath*:mapper/*.xml"/>-->
+<!--    </bean>-->
+<!--    <bean id="mkSqlSessionFactoryBean" class="org.mybatis.spring.SqlSessionFactoryBean">-->
+<!--        <property name="mapperLocations" ref="mkFileSystemResource"/>-->
+<!--    </bean>-->
+
+
 
 </beans>
 
