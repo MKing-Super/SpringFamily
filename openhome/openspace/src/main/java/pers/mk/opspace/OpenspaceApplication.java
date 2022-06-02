@@ -44,7 +44,7 @@ public class OpenspaceApplication {
         app.setBanner(banner);
         ConfigurableApplicationContext run = app.run();
         log.info(">>>>>>>>>>>>>>>> OpenspaceApplication Started >>>>>>>>>>>>>>>>>>");
-        Object dataconfig = run.getBean("mkSqlSessionFactory");
+//        Object dataconfig = run.getBean("mkSqlSessionFactory");
 //        System.out.println(dataconfig);
 
     }
