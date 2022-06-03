@@ -1,12 +1,12 @@
 spring:
-  #数据库
+#   数据库
 #  datasource:
 #    username: root
 #    password: 123
 #    url: jdbc:mysql://localhost:3306/boot_crm?serverTimezone=UTC&useUnicode=true&characterEncoding=utf-8
 #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    type: com.alibaba.druid.pool.DruidDataSource
-  #整合thymeleaf
+#   整合thymeleaf
   thymeleaf:
     prefix: classpath:/templates/
     check-template-location: true
@@ -22,6 +22,12 @@ spring:
   web:
     resources:
       static-locations: classpath:/static/,file:F://video
+
+# spring security
+  security:
+    user:
+      name: mk
+      password: 123
 
 
 

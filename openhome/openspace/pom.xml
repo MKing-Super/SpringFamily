@@ -80,6 +80,32 @@
             <artifactId>fastjson</artifactId>
             <version>1.2.28</version>
         </dependency>
+        <!-- 添加security依赖 -->
+        <!-- SpringSecurity 对 Web 应用进行权限管理 -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>5.6.3</version>
+        </dependency>
+        <!-- SpringSecurity 配置 -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>5.6.3</version>
+        </dependency>
+        <!-- SpringSecurity 标签库 -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>5.6.3</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-security-web</artifactId>
+                    <groupId>org.springframework.security</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
 
         <!-- 我的数据层 -->
         <dependency>
