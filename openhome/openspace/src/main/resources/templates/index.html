@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+    Query your city by ip.
+    <form action="/data/query-ip">
+        ak-><input name="akStr">
+        ip-><input name="ipStr">
+        <input type="submit" value="提交">
+    </form>
+    <hr/>
+    <div th:text="${reslutMap}"></div>
+</body>
+</html>
