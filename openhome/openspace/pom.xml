@@ -105,6 +105,12 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <!-- 各种http请求 -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.9.2</version>
+        </dependency>
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>

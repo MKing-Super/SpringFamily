@@ -2,6 +2,7 @@ package pers.mk.opspace.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
 import com.mk.data.annotation.DataAnnotation;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,5 +32,13 @@ public class AppConfig {
 //        dataSource.setPassword("123");
 //        return dataSource;
 //    }
+
+    @Bean
+    public OkHttpClient okHttpClient(){
+
+        return new OkHttpClient.Builder()
+                .retryOnConnectionFailure(true)
+                .build();
+    }
 
 }
