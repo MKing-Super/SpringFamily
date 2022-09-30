@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ImportResource;
 import javax.sql.DataSource;
 
 @Configuration
+//自定义的注解
 @DataAnnotation
 @ImportResource(locations = {"classpath:/config/*.xml"})
 public class AppConfig {

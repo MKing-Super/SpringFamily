@@ -1,8 +1,7 @@
 package pers.mk.opspace.java;
 
-import pers.mk.opspace.annotation.Test;
-import pers.mk.opspace.enums.DemoEnum;
-import pers.mk.opspace.model.DemoModel;
+import pers.mk.api.enums.DemoEnum;
+import pers.mk.api.model.DemoModel;
 
 import java.util.Random;
 

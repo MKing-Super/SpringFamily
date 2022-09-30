@@ -1,4 +1,4 @@
-package pers.mk.opspace.enums;
+package pers.mk.api.enums;
 
 public enum DemoEnum {
 

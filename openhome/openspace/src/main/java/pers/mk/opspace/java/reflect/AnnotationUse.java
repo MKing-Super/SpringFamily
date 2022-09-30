@@ -1,8 +1,8 @@
 package pers.mk.opspace.java.reflect;
 
+import pers.mk.api.enums.DemoEnum;
 import pers.mk.opspace.annotation.MetaAnnotation;
 import pers.mk.opspace.annotation.Test;
-import pers.mk.opspace.enums.DemoEnum;
 
 import java.lang.reflect.Method;
 

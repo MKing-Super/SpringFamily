@@ -1,4 +1,4 @@
-package pers.mk.opspace.model;
+package pers.mk.api.model;
 
 public class DemoModel {
     private String username;
