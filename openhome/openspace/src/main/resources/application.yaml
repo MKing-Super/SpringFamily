@@ -31,4 +31,7 @@ spring:
       password: 123
 
 
+server:
+  port: 9999
+
 
