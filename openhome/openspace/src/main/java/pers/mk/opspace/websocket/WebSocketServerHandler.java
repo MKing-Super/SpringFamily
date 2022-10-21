@@ -1,5 +1,6 @@
 package pers.mk.opspace.websocket;
 
+import cn.hutool.core.date.DateUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
@@ -19,6 +20,7 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerHandshaker;
 import io.netty.handler.codec.http.websocketx.WebSocketServerHandshakerFactory;
 import io.netty.util.CharsetUtil;
 
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -105,7 +107,7 @@ public class WebSocketServerHandler extends SimpleChannelInboundHandler<Object> 
         ctx.channel().write(
                 new TextWebSocketFrame(request
                         + " , 欢迎使用Netty WebSocket服务，现在时刻："
-                        + new java.util.Date().toString()));
+                        + DateUtil.format(new Date(),"yyyy-MM-dd HH:mm:ss")));
     }
 
     private static void sendHttpResponse(ChannelHandlerContext ctx,

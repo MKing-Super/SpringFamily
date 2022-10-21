@@ -16,8 +16,7 @@
         socket = new WebSocket("ws://localhost:8080/websocket");
         socket.onmessage = function (event) {
             var ta = document.getElementById('responseText');
-            ta.value = "";
-            ta.value = event.data
+            ta.value = event.data + '\n\n' + ta.value;
         };
         socket.onopen = function (event) {
             var ta = document.getElementById('responseText');
@@ -37,16 +36,21 @@
         if (!window.WebSocket) {
             return;
         }
+        if (message === null || message === ''){
+            alert('请填写内容！');
+            return;
+        }
         if (socket.readyState == WebSocket.OPEN) {
             socket.send(message);
-        }
-        else {
+            var ta = document.getElementById('message');
+            ta.value = null;
+        } else {
             alert("WebSocket连接没有建立成功!");
         }
     }
 </script>
 <form onsubmit="return false;">
-    <input type="text" name="message" value="Netty最佳实践"/>
+    <input type="text" id="message" name="message" placeholder="Netty最佳实践" />
     <br><br>
     <input type="button" value="发送WebSocket请求消息" onclick="send(this.form.message.value)"/>
     <hr color="blue"/>
