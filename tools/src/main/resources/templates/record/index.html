@@ -10,5 +10,19 @@
     <label for="recordDate"></label><input type="date" id="recordDate" name="recordDate">
     <input type="submit" id="submit" value="查看">
 </form>
+<script type="text/javascript">
+    $(function (){
+        $("#save").click(function (){
+            let serialize = $("#detail-form").serialize();
+            $.ajax({
+                url:"/record/detail-save",
+                data:serialize,
+                success:function(data){
+                    $("#result").text(data)
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
