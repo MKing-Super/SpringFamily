@@ -1,11 +1,14 @@
 package pers.mk.tools.converter.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pers.mk.tools.converter.model.FuturesRecord;
 import pers.mk.tools.converter.model.Record;
+import pers.mk.tools.converter.service.FuturesRecordService;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -19,10 +22,13 @@ import java.util.HashMap;
 @Controller
 @RequestMapping("/record")
 public class RecordController {
+    @Autowired
+    private FuturesRecordService futuresRecordService;
 
 
     @RequestMapping("/index")
     public String index(){
+        FuturesRecord futuresRecord = futuresRecordService.selectById(1);
         return "/record/index";
     }
 
