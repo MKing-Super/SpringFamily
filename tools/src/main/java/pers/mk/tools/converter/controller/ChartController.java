@@ -18,7 +18,7 @@ import java.util.Random;
 @RequestMapping("/chart")
 public class ChartController {
 
-    private static BigDecimal init = new BigDecimal("5500");
+    private static BigDecimal init = new BigDecimal("500");
     private static BigDecimal upPrice = BigDecimal.ZERO;
     private static BigDecimal downPrice = BigDecimal.ZERO;;
     private static BigDecimal totalProfit = BigDecimal.ZERO;
@@ -96,7 +96,14 @@ public class ChartController {
 
     private BigDecimal obtainC(){
         Random r = new Random();
-        int t = r.nextInt(10) + 1;
+        int rang = 1;
+        int big = r.nextInt(10) + 1;
+        if (big <= 3){
+            rang = 3;
+        }else {
+            rang = 1;
+        }
+        int t = r.nextInt(3*rang) + 1;
         //获取随机数
         int i = r.nextInt(t*100);
         int symbol = r.nextInt(100) + 1;
