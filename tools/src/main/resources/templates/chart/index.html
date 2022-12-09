@@ -4,31 +4,68 @@
     <meta charset="UTF-8">
     <title></title>
 </head>
-<!--<script type="text/javascript" src="jquery.js"></script>-->
 <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
 <script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
 
 <body>
-<div id="main" style="width: 100%;height:800px;"></div>
-<input type="button" id="stop" value="开始" onclick="chartStop()">
+<div id="main" style="width: 100%;height:800px;margin: auto"></div>
+<input type="button" id="stop" value="暂停" onclick="chartStop()">
+<a href="/chart/index000">静态折线图</a>
+<input type="number" id="y-length">
+<input type="button" onclick="setYlength()" value="设置">
+<br/>
+<label id="total-profit"></label>
+<br/>
+<input type="button" onclick="up()" value="↑↑↑↑↑↑">
+<label id="up-profit"></label>
+<br/>
+<input type="button" onclick="down()" value="↓↓↓↓↓↓">
+<label id="down-profit"></label>
 </body>
 
 </html>
 <script type="text/javascript">
-    $(function (){
-
-    });
-
-
-    var stop = 2;
+    var stop = 1;
+    //y轴的长度
+    var ylength = 50;
 
     function chartStop() {
-        if (stop === 0){
-            stop = 2
-            $("#stop").val('暂停')
-        }else {
+        if (stop === 1){
             stop = 0
             $("#stop").val('开始')
+        }else {
+            stop = 1
+            $("#stop").val('暂停')
+        }
+    }
+
+    function up() {
+        $.ajax({
+            url:"/chart/up",
+            async: false,
+            data:{"price":value},
+            success:function(data){
+
+            }
+        });
+    }
+
+    function down() {
+        $.ajax({
+            url:"/chart/down",
+            async: false,
+            data:{"price":value},
+            success:function(data){
+
+            }
+        });
+    }
+
+    function setYlength() {
+        var val = $("#y-length").val();
+        if (val !== ""){
+            ylength = val
+            // location.reload()
         }
     }
 
@@ -37,8 +74,11 @@
         $.ajax({
             url:"/chart/getData",
             async: false,
-            success:function(data){
-                result = data;
+            success:function(map){
+                result = map.nowPrice;
+                $("#up-profit").text(map.upProfit);
+                $("#down-profit").text(map.downProfit);
+                $("#total-profit").text(map.totalProfit);
             }
         });
         while (true){
@@ -54,8 +94,8 @@
 
     function randomData() {
         now = new Date(+now + oneDay);
-        // value = getData();
-        value = value + Math.random() * 21 - 10;
+        value = getData();
+        // value = value + Math.random() * 21 - 10;
         return {
             name: now.toString(),
             value: [
@@ -67,8 +107,8 @@
     var data = [];
     var now = +new Date(1997, 9, 3);
     var oneDay = 24 * 3600 * 1000;
-    var value = Math.random() * 1000;
-    for(var i = 0; i < 100; i++) {
+    var value = 5500;
+    for(var i = 0; i < ylength; i++) {
         data.push(randomData());
     }
     option = {
@@ -94,12 +134,13 @@
         },
         yAxis: {
             type: 'value',
-            boundaryGap: [0, '100%'],
+            boundaryGap: [0, '1%'],
             splitLine: {
                 show: false
             }
         },
-        series: [{
+        series: [
+            {
             name: '模拟数据',
             type: 'line',
             showSymbol: false,
@@ -126,7 +167,7 @@
                     }
                 },
                 data: [{
-                    yAxis: 5000
+                    yAxis: 5500
                 }]
             },
         }],
@@ -135,7 +176,6 @@
     myChart.setOption(option);
     setInterval(function() {
         for(var i = 0; i < stop; i++) {
-            debugger
             data.shift();
             data.push(randomData());
         }
