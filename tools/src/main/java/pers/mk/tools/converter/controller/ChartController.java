@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Slf4j
@@ -16,16 +18,24 @@ import java.util.Random;
 @RequestMapping("/chart")
 public class ChartController {
 
-    private static BigDecimal init = new BigDecimal("5500");
+    private static BigDecimal init = new BigDecimal("500");
+    private static BigDecimal upPrice = BigDecimal.ZERO;
+    private static BigDecimal downPrice = BigDecimal.ZERO;;
+    private static BigDecimal totalProfit = BigDecimal.ZERO;
 
     @RequestMapping("/index")
     public String index(){
         return "/chart/index";
     }
 
+    @RequestMapping("/index000")
+    public String index000(){
+        return "/chart/index000";
+    }
+
     @RequestMapping("/getData")
     @ResponseBody
-    public Integer getData(){
+    public Map<String,Object> getData(){
         BigDecimal range = this.obtainC();
         BigDecimal multiply = null;
         if (range.compareTo(BigDecimal.ZERO) > 0){
@@ -38,7 +48,36 @@ public class ChartController {
             multiply = init.subtract(down).setScale(0, RoundingMode.DOWN);
         }
         init = multiply;
-        return init.intValue();
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("nowPrice",init.intValue());
+        map.put("upProfit",upPrice.equals(BigDecimal.ZERO)?null:init.subtract(upPrice));
+        map.put("downProfit",downPrice.equals(BigDecimal.ZERO)?null:downPrice.subtract(init));
+        map.put("totalProfit",totalProfit);
+        return map;
+    }
+
+    @RequestMapping("/up")
+    @ResponseBody
+    public Integer up(Integer price){
+        if (upPrice.equals(BigDecimal.ZERO)){
+            upPrice = new BigDecimal(price);
+        }else {
+            totalProfit = totalProfit.add(new BigDecimal(init.subtract(upPrice).intValue()));
+            upPrice = BigDecimal.ZERO;
+        }
+        return price;
+    }
+
+    @RequestMapping("/down")
+    @ResponseBody
+    public Integer down(Integer price){
+        if (downPrice.equals(BigDecimal.ZERO)){
+            downPrice = new BigDecimal(price);
+        }else {
+            totalProfit = totalProfit.add(new BigDecimal(downPrice.subtract(init).intValue()));
+            downPrice = BigDecimal.ZERO;
+        }
+        return price;
     }
 
 
@@ -57,12 +96,19 @@ public class ChartController {
 
     private BigDecimal obtainC(){
         Random r = new Random();
-        int t = r.nextInt(10) + 1;
+        int rang = 1;
+        int big = r.nextInt(10) + 1;
+        if (big <= 3){
+            rang = 3;
+        }else {
+            rang = 1;
+        }
+        int t = r.nextInt(3*rang) + 1;
         //获取随机数
         int i = r.nextInt(t*100);
-        int symbol = r.nextInt(2);
+        int symbol = r.nextInt(100) + 1;
         BigDecimal c = new BigDecimal(i).divide(new BigDecimal(10000),4,RoundingMode.HALF_UP);
-        BigDecimal multiply = c.multiply(new BigDecimal(symbol == 0 ? -1 : 1));
+        BigDecimal multiply = c.multiply(new BigDecimal(symbol > 49 ? 1 : -1));
         return multiply;
     }
 }
