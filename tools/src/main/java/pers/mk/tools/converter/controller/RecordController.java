@@ -64,7 +64,9 @@ public class RecordController {
         String[] split = substr.split(",");
         String s = split[6];
         Double v = Double.parseDouble(s);
-        return String.valueOf(v.intValue());
+        String s1 = String.valueOf(v.intValue());
+        log.info(s1);
+        return s1;
     }
 
 }

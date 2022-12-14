@@ -11,9 +11,18 @@
     <input type="submit" id="submit" value="查看">
     <br/>
     <input type="text" id="nowPrice" disabled>
-    <input type="button" onclick="getNowPrice()" value="tttttt">
 </form>
 <script type="text/javascript">
+    setInterval(function () {
+        $.ajax({
+            url:"/record/now-price",
+            async: false,
+            success:function(data){
+                $("#nowPrice").val(data);
+            }
+        });
+    },5000);
+
     $(function (){
         $("#save").click(function (){
             let serialize = $("#detail-form").serialize();
@@ -26,16 +35,6 @@
             });
         });
     });
-
-    function getNowPrice() {
-        $.ajax({
-            url:"/record/now-price",
-            async: false,
-            success:function(data){
-                $("#nowPrice").val(data);
-            }
-        });
-    }
 
 
 </script>
