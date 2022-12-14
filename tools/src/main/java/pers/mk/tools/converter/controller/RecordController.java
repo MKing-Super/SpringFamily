@@ -1,5 +1,8 @@
 package pers.mk.tools.converter.controller;
 
+import cn.hutool.http.Header;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -45,6 +48,23 @@ public class RecordController {
     public Boolean detailSave(Record record){
         System.out.println(record);
         return true;
+    }
+
+    @RequestMapping("/now-price")
+    @ResponseBody
+    public String nowPrice(){
+        String url = "https://hq.sinajs.cn/rn=e4rdy&list=nf_C0,nf_C2301,nf_C2303,nf_C2305,nf_C2307,nf_C2309,nf_C2311";
+        String result = HttpRequest.get(url)
+                .header(Header.REFERER, "https://vip.stock.finance.sina.com.cn/")
+                .timeout(2000)
+                .execute().body();
+        int start = result.indexOf("hq_str_nf_C2303=");
+        int end = result.indexOf("hq_str_nf_C2305=");
+        String substr = result.substring(start, end);
+        String[] split = substr.split(",");
+        String s = split[6];
+        Double v = Double.parseDouble(s);
+        return String.valueOf(v.intValue());
     }
 
 }

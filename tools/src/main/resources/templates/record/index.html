@@ -9,6 +9,9 @@
 <form action="/record/detail" method="get">
     <label for="recordDate"></label><input type="date" id="recordDate" name="recordDate">
     <input type="submit" id="submit" value="查看">
+    <br/>
+    <input type="text" id="nowPrice" disabled>
+    <input type="button" onclick="getNowPrice()" value="tttttt">
 </form>
 <script type="text/javascript">
     $(function (){
@@ -23,6 +26,18 @@
             });
         });
     });
+
+    function getNowPrice() {
+        $.ajax({
+            url:"/record/now-price",
+            async: false,
+            success:function(data){
+                $("#nowPrice").val(data);
+            }
+        });
+    }
+
+
 </script>
 </body>
 </html>
