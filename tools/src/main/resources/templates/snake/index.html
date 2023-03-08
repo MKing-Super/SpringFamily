@@ -10,7 +10,7 @@
         .bigBox {
             width: 800px;
             height: 600px;
-            border: 2px solid brown;
+            /*border: 2px solid brown;*/
             margin: 0 auto;
             margin-top: 100px;
             position: relative;
@@ -28,10 +28,11 @@
         .foodBox {
             width: 50px;
             height: 50px;
-            background-color: darkred;
+            background-color: pink;
             position: absolute;
             left: 300px;
             top: 300px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -40,7 +41,7 @@
 <div id="position">x:50,y:50</div>
 <button onclick="reset()">重置</button>
 <div class="bigBox">
-    <div class="smallBox"></div>
+    <div class="smallBox" style="border: 1px solid peru;"></div>
     <div class="foodBox"></div>
 </div>
 <script>
