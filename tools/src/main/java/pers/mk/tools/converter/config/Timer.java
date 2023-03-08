@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 @EnableScheduling
 public class Timer {
-    @Scheduled(fixedRate = 5000)
+//    @Scheduled(fixedRate = 5000)
     public void initTime() {
         ToolsUtils.getNowPrice();
     }
