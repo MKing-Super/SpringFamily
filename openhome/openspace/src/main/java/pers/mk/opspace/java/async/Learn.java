@@ -2,6 +2,7 @@ package pers.mk.opspace.java.async;
 
 import lombok.SneakyThrows;
 
+import java.math.BigDecimal;
 import java.util.concurrent.*;
 
 /**
@@ -173,7 +174,12 @@ public class Learn {
 //        method3();
 //        method4();
 //        method5();
-        method6();
+//        method6();
+
+        BigDecimal divide = new BigDecimal(324)
+                .divide(new BigDecimal(68), BigDecimal.ROUND_CEILING);
+        System.out.println(divide);
+
 
     }
     
