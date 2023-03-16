@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,7 +25,8 @@ public class Test {
     }
 
     public static Map<String,String> readCsvByBufferedReaderBidCountMap(){
-        File csv = new File("D:/20230315test.csv");
+        long startTime = System.currentTimeMillis();
+        File csv = new File("D:/20230316.csv");
         csv.setReadable(true);
         csv.setWritable(true);
         InputStreamReader isr = null;
@@ -38,9 +40,11 @@ public class Test {
         String line = "";
         Map<String, String> records = new HashMap<>();
         try {
-            FileWriter w = new FileWriter("D:/20230315result.csv");
-            BufferedWriter bw = new BufferedWriter(w);
+            OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream("D:/20230316result(pro).csv"), StandardCharsets.UTF_8);
+            BufferedWriter bw=new BufferedWriter(write);
             bw.write("\"parameter\"," +
+                    "\"level_id\"," +
+                    "\"vehicle_id\"," +
                     "\"price\"," +
                     "\"priceLow\"," +
                     "\"priceUpper\"," +
@@ -64,7 +68,8 @@ public class Test {
                         records.put(arr0[n],arr1[n]);
                     }
                     String create_time = records.get("create_time") == null ? "" : records.get("create_time").split(" ")[0];
-                    String requestStr = "http://127.0.0.1:80/ai/evalution/exact?" +
+                    String requestStr = "http://192.168.35.156:8080" +
+                            "/ai/evalution/exact?" +
                             "modelID=" + records.get("model_id") +
                             "&predictType=2" +
                             "&regDate=" + records.get("reg_date") +
@@ -105,16 +110,22 @@ public class Test {
                     Double old_b2b_price_lower = Double.valueOf(records.get("old_b2b_price_lower"));
                     Double old_b2b_price_upper = Double.valueOf(records.get("old_b2b_price_upper"));
                     double final_price = Double.valueOf(records.get("final_price")) / 10000;
+                    String level_id = records.get("level_id").toString();
+                    String vehicle_id = records.get("vehicle_id").toString();
 
-                    bw.newLine();
-                    bw.write("\""+requestStr + "\",\"" +
+                    String s = "\"" + requestStr + "\",\"" +
+                            level_id + " \",\"" +
+                            vehicle_id + " \",\"" +
                             price + " \",\"" +
                             priceLow + " \",\"" +
                             priceUpper + " \",\"" +
                             old_b2b_price + " \",\"" +
                             old_b2b_price_lower + " \",\"" +
                             old_b2b_price_upper + " \",\"" +
-                            final_price + "\"");
+                            final_price + "\"";
+
+                    bw.newLine();
+                    bw.write(s);
                     records = new HashMap<>();
                 }
                 i++;
@@ -125,7 +136,9 @@ public class Test {
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
-
+            long endTime = System.currentTimeMillis();
+            long l = endTime - startTime;
+            System.out.println(l);
         }
         return records;
     }
