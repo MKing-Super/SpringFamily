@@ -12,6 +12,7 @@ import org.springframework.context.*;
 import org.springframework.beans.*;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.PrintStream;
 import java.lang.reflect.Method;
@@ -42,7 +43,7 @@ public class OpenspaceApplication {
             }
         };
         app.setBanner(banner);
-        ConfigurableApplicationContext run = app.run();
+        ConfigurableApplicationContext run = app.run("server.port = 8080");
         log.info(">>>>>>>>>>>>>>>> OpenspaceApplication Started >>>>>>>>>>>>>>>>>>");
 //        Object dataconfig = run.getBean("mkSqlSessionFactory");
 //        System.out.println(dataconfig);

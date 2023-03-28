@@ -19,14 +19,18 @@ import java.util.Map;
  */
 public class Test {
 
-    public static void main(String[] args) {
+    private static String inPath = "D:/mk-gz3.csv";
+    private static String outPath = "D:/mk-gz3(.csv";
+    private static Integer errorTotal = 0;
 
-        Map<String, String> stringStringMap = readCsvByBufferedReaderBidCountMap();
+
+    public static void main(String[] args) {
+        readCsvByBufferedReaderBidCountMap();
     }
 
     public static Map<String,String> readCsvByBufferedReaderBidCountMap(){
         long startTime = System.currentTimeMillis();
-        File csv = new File("D:/20230316.csv");
+        File csv = new File(inPath);
         csv.setReadable(true);
         csv.setWritable(true);
         InputStreamReader isr = null;
@@ -40,7 +44,7 @@ public class Test {
         String line = "";
         Map<String, String> records = new HashMap<>();
         try {
-            OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream("D:/20230316result(pro).csv"), StandardCharsets.UTF_8);
+            OutputStreamWriter write = new OutputStreamWriter(new FileOutputStream(outPath), StandardCharsets.UTF_8);
             BufferedWriter bw=new BufferedWriter(write);
             bw.write("\"parameter\"," +
                     "\"level_id\"," +
@@ -68,7 +72,7 @@ public class Test {
                         records.put(arr0[n],arr1[n]);
                     }
                     String create_time = records.get("create_time") == null ? "" : records.get("create_time").split(" ")[0];
-                    String requestStr = "http://192.168.35.156:8080" +
+                    String requestStr = "http://gz.autostreets.com:8080" +
                             "/ai/evalution/exact?" +
                             "modelID=" + records.get("model_id") +
                             "&predictType=2" +
@@ -101,7 +105,29 @@ public class Test {
                             "&damageCn=" + records.get("damage_cn") +
                             "&starTypeSum=" + records.get("star_type_sum");
                     String result = HttpUtil.get(requestStr);
-                    JSONObject jsonObject = JSON.parseObject(result);
+                    JSONObject jsonObject = null;
+                    try {
+                        jsonObject = JSON.parseObject(result);
+                    }catch (Exception e){
+                        System.out.println(result);
+                        errorTotal++;
+                        System.out.println("errorTotal => " + errorTotal);
+                        String s = "\"" + requestStr + "\",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "" + " \",\"" +
+                                "result" + "\"";
+                        bw.newLine();
+                        bw.write(s);
+                        records = new HashMap<>();
+                        continue;
+                    }
                     JSONObject b2bPrice = jsonObject.getJSONObject("b2bAreaExactPirce");
                     String priceUpper = b2bPrice.get("priceUpper").toString();
                     String priceLow = b2bPrice.get("priceLow").toString();
@@ -129,16 +155,17 @@ public class Test {
                     records = new HashMap<>();
                 }
                 i++;
+                System.out.println(i);
             }
             bw.close();
 
-            System.out.println("end <<<<<<<<<<<<<<<<");
+//            System.out.println("end <<<<<<<<<<<<<<<<");
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
             long endTime = System.currentTimeMillis();
             long l = endTime - startTime;
-            System.out.println(l);
+//            System.out.println(l);
         }
         return records;
     }
