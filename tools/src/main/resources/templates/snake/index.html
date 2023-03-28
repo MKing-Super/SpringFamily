@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+    <title>snake</title>
+    <!--<script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>-->
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
     <style>
         .bigBox {
             width: 800px;
@@ -50,6 +51,10 @@
     var smallBox = document.getElementsByClassName("smallBox")[0];
     var bigBox = document.getElementsByClassName("bigBox")[0];
     var foodBox = document.getElementsByClassName("foodBox")[0];
+    // 小盒子每次移动的距离
+    var speed = 50;
+    // 默认行进方向
+    var autoRunDirection = 39;
     class Key {
         constructor(smallBox, bigBox) {
             this.smallBox = smallBox;
@@ -65,8 +70,6 @@
             var y_food = parseInt(getComputedStyle(foodBox).top);
             // console.log("l="+l);
             // console.log("t="+t);
-            // 小盒子每次移动的距离
-            var speed = 50;
             if (ev.shiftKey) {
                 speed *= 2;
             }
@@ -80,6 +83,7 @@
                     } else {
                         smallBox.style.left = 0;
                     }
+                    autoRunDirection = 37
                     break;
                 // 上
                 case 38:
@@ -89,6 +93,7 @@
                     } else {
                         smallBox.style.top = 0;
                     }
+                    autoRunDirection = 38
                     break;
                 // 右
                 case 39:
@@ -99,6 +104,7 @@
                     } else {
                         smallBox.style.left = (bigBox.clientWidth - smallBox.offsetWidth) + "px";
                     }
+                    autoRunDirection = 39
                     break;
                 // 下
                 case 40:
@@ -108,6 +114,7 @@
                     } else {
                         smallBox.style.top = (bigBox.clientHeight - smallBox.offsetHeight) + "px";
                     }
+                    autoRunDirection = 40
                     break;
             }
 
@@ -115,6 +122,7 @@
                 direction(l,t,true);
                 x_food = (Math.floor(Math.random() * (15 - 0 + 1)) + 0) * 50
                 y_food = (Math.floor(Math.random() * (11 - 0 + 1)) + 0) * 50
+
                 foodBox.style.left = x_food + "px";
                 foodBox.style.top = y_food + "px";
             }else {
@@ -129,41 +137,151 @@
     //================================== other
 
     function direction(x,y,isEatFood) {
-        $.ajax({
-            url:"/snake/direction",
-            async: false,
-            data:{'x':x,'y':y,'isEatFood':isEatFood},
-            success:function(res){
-                var tp = res;
-                var score = document.getElementsByClassName('smallBox').length
-                $("#position").text('[x:' + x + ',y:' + y + ']  ' + score);
-                if (isEatFood){
-                    var div = document.createElement('div');
-                    div.className = 'smallBox'
-                    div.style.cssText = 'top: ' + 50 + 'px; left: ' + 50 + 'px;'
-                    document.getElementsByClassName('bigBox')[0].appendChild(div)
-                }
-                for (var i = 0;;i++){
-                    if (tp === null) break;
-                    document.getElementsByClassName("smallBox")[i].style.left = tp.x + "px";
-                    document.getElementsByClassName("smallBox")[i].style.top = tp.y + "px";
-                    tp = tp.next
-                }
+        var tp = directionBackStage(x,y,isEatFood);
+        var score = document.getElementsByClassName('smallBox').length
+        $("#position").text('[x:' + x + ',y:' + y + ']  ' + score);
+        if (isEatFood){
+            var div = document.createElement('div');
+            div.className = 'smallBox'
+            div.style.cssText = 'top: ' + 50 + 'px; left: ' + 50 + 'px;'
+            document.getElementsByClassName('bigBox')[0].appendChild(div)
+        }
+        for (var i = 0;;i++){
+            if (tp === null || tp === undefined) break;
+            document.getElementsByClassName("smallBox")[i].style.left = tp.x + "px";
+            document.getElementsByClassName("smallBox")[i].style.top = tp.y + "px";
+            tp = tp.next
+        }
 
-            }
-        });
+
+        // $.ajax({
+        //     url:"/snake/direction",
+        //     async: false,
+        //     data:{'x':x,'y':y,'isEatFood':isEatFood},
+        //     success:function(res){
+        //         var tp = res;
+        //         var score = document.getElementsByClassName('smallBox').length
+        //         $("#position").text('[x:' + x + ',y:' + y + ']  ' + score);
+        //         if (isEatFood){
+        //             var div = document.createElement('div');
+        //             div.className = 'smallBox'
+        //             div.style.cssText = 'top: ' + 50 + 'px; left: ' + 50 + 'px;'
+        //             document.getElementsByClassName('bigBox')[0].appendChild(div)
+        //         }
+        //         for (var i = 0;;i++){
+        //             if (tp === null) break;
+        //             document.getElementsByClassName("smallBox")[i].style.left = tp.x + "px";
+        //             document.getElementsByClassName("smallBox")[i].style.top = tp.y + "px";
+        //             tp = tp.next
+        //         }
+        //
+        //     }
+        // });
+
+
     }
 
     function reset() {
-        $.ajax({
-            url:"/snake/reset",
-            async: false,
-            success:function(res){
-                $("#position").text(res);
-            }
-        });
+        // $.ajax({
+        //     url:"/snake/reset",
+        //     async: false,
+        //     success:function(res){
+        //         $("#position").text(res);
+        //     }
+        // });
         location.reload()
     }
+
+    // 后台代码搬到页面
+    function SnakeNode(x,y,next) {
+        this.x = x;
+        this.y = y;
+        this.next = next;
+    }
+
+    function snakeAdd(x,y,tp){
+        if (tp.next != null){
+            snakeAdd(tp.x,tp.y,tp.next);
+            tp.x = x;
+            tp.y = y;
+            return tp;
+        }else {
+            tp.x = x;
+            tp.y = y;
+            return tp;
+        }
+    }
+
+    var snake = new SnakeNode(50, 50)
+
+    function directionBackStage(x,y,isEatFood){
+        if (isEatFood){
+            var temp = new SnakeNode(x, y)
+            temp.next = snake
+            snake = temp;
+        }else {
+            snake = this.snakeAdd(x ,y , snake);
+        }
+        return snake;
+    }
+
+    function checkTime(){
+        var l = parseInt(getComputedStyle(smallBox).left);
+        var t = parseInt(getComputedStyle(smallBox).top);
+        var x_food = parseInt(getComputedStyle(foodBox).left);
+        var y_food = parseInt(getComputedStyle(foodBox).top);
+        switch (autoRunDirection) {
+            // 左
+            case 37:
+                // 小盒子应该向左移动
+                l -= speed
+                if (l >= 0) {
+                    smallBox.style.left = l + "px";
+                } else {
+                    smallBox.style.left = 0;
+                }
+                break;
+            // 上
+            case 38:
+                t -= speed;
+                if (t >= 0) {
+                    smallBox.style.top = t + "px";
+                } else {
+                    smallBox.style.top = 0;
+                }
+                break;
+            // 右
+            case 39:
+                l += speed;
+                if (l <= (bigBox.clientWidth - smallBox.offsetWidth)) {
+                    // 小盒子应该向右移动
+                    smallBox.style.left = l + "px";
+                } else {
+                    smallBox.style.left = (bigBox.clientWidth - smallBox.offsetWidth) + "px";
+                }
+                break;
+            // 下
+            case 40:
+                t += speed;
+                if (t <= (bigBox.clientHeight - smallBox.offsetHeight)) {
+                    smallBox.style.top = t + "px";
+                } else {
+                    smallBox.style.top = (bigBox.clientHeight - smallBox.offsetHeight) + "px";
+                }
+                break;
+        }
+        if (x_food === l && y_food === t){
+            direction(l,t,true);
+            x_food = (Math.floor(Math.random() * (15 - 0 + 1)) + 0) * 50
+            y_food = (Math.floor(Math.random() * (11 - 0 + 1)) + 0) * 50
+            foodBox.style.left = x_food + "px";
+            foodBox.style.top = y_food + "px";
+        }else {
+            direction(l,t,false);
+        }
+
+    }
+    setInterval("checkTime()",500);
 
 </script>
 </body>
