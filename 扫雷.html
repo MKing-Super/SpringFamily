@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mineSweeping</title>
+    <!--<script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>-->
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <style>
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 0px;
+        }
+        td {
+            width: 20px;
+            height: 20px;
+
+        }
+    </style>
+</head>
+
+<body>
+<table style="margin: auto">
+    <tbody>
+
+    </tbody>
+</table>
+
+<input type="number">
+<button onclick="test()">test</button>
+
+<script>
+    var isWin = true
+    var tableWith = 30;
+    var tableHeight = 20;
+
+    var gLevel = 10
+
+    var arr = new Array();
+    for (var i = 0; i < tableHeight; i++) {
+        arr[i] = new Array();
+        for (var j = 0; j < tableWith; j++) {
+            var res = randomMethod(gLevel)
+            if (res === 1) {
+                arr[i][j] = 1;
+            } else {
+                arr[i][j] = 0;
+            }
+        }
+    }
+
+    var tbody = document.querySelector("tbody");
+    for (var i = 0; i < arr.length; i++) {
+        var tr = document.createElement("tr");
+        tbody.appendChild(tr);
+        for (var j = 0; j < arr[i].length; j++) {
+            var td = document.createElement("td");  //创建单元格
+            td.onclick = clickMethod
+            td.onmouseover = mouseoverMethod
+            td.onmouseout = mouseoutMethod
+            td.id = j + "*" + i
+            tr.appendChild(td);
+            td.innerHTML="<a hidden>" + arr[i][j]  + "</a>" +
+                "<a ></a>" +
+                "<a ></a>";
+        }
+    }
+
+    function randomMethod(point) {
+        var n = 0;
+        var randomNumber = Math.random() * (tableWith - n) + n;
+        if (randomNumber < point) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    function clickMethod(){
+        if (this.children[1].textContent !== 'P'){
+            this.style.backgroundColor = 'gray'
+            if (parseInt(this.firstChild.textContent) === 1){
+                alert("error")
+                location.reload()
+            }
+            aroundScan(this)
+        }
+    }
+
+    function mouseoverMethod() {
+        if (this.style.backgroundColor !== 'dimgrey'){
+            this.style.backgroundColor = 'pink'
+            shadow(this,'#cccccc')
+        }
+    }
+
+    function mouseoutMethod() {
+        if (this.style.backgroundColor !== 'dimgrey'){
+            this.style.backgroundColor = 'white'
+            shadow(this,'white')
+        }
+    }
+
+    function pointCoord(x,y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    function shadow(ppp,color) {
+        var coord = ppp.id.split('*')
+        var x = parseInt(coord[0])
+        var y = parseInt(coord[1])
+        var pointArr = [
+            new pointCoord(x-1,y-1),
+            new pointCoord(x-1,y),
+            new pointCoord(x-1,y+1),
+            new pointCoord(x,y-1),
+            new pointCoord(x,y+1),
+            new pointCoord(x+1,y-1),
+            new pointCoord(x+1,y),
+            new pointCoord(x+1,y+1)
+        ]
+        for (var i in pointArr){
+            if (pointArr[i].x >= 0 && pointArr[i].y >= 0 && pointArr[i].x < tableWith && pointArr[i].y < tableHeight){
+                var p = document.getElementById(pointArr[i].x + "*" + pointArr[i].y)
+                if (p.style.backgroundColor !== 'dimgrey'){
+                    p.style.backgroundColor = color
+                }
+            }
+        }
+    }
+
+
+    function aroundScan(ppp) {
+        var num = 0
+        if (ppp === null){
+            return;
+        }
+        var coord = ppp.id.split('*')
+        var x = parseInt(coord[0])
+        var y = parseInt(coord[1])
+        var tempArr = [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ]
+
+        var pointArr = [
+            new pointCoord(x-1,y-1),
+            new pointCoord(x-1,y),
+            new pointCoord(x-1,y+1),
+            new pointCoord(x,y-1),
+            new pointCoord(x,y+1),
+            new pointCoord(x+1,y-1),
+            new pointCoord(x+1,y),
+            new pointCoord(x+1,y+1)
+        ]
+        for (var i in pointArr){
+            if (pointArr[i].x >= 0 && pointArr[i].y >= 0 && pointArr[i].x < tableWith && pointArr[i].y < tableHeight){
+                var p0 = document.getElementById(pointArr[i].x + "*" + pointArr[i].y)
+                var textContent = parseInt(p0.firstChild.textContent)
+                if (textContent === 1){
+                    num++
+                }else if (textContent === 0) {
+                    tempArr[i] = 0
+                }
+            }
+        }
+        ppp.lastChild.textContent = num
+        ppp.style.backgroundColor = 'dimgrey'
+        for (var i in tempArr){
+            if (tempArr[i] === 0){
+                var key = pointArr[i].x + "*" + pointArr[i].y
+                var p0 = document.getElementById(key)
+                if (p0 !== null){
+                    aroundScan(p0)
+                }
+            }
+        }
+        return ;
+    }
+
+
+    document.addEventListener('contextmenu',function(e){
+        if (e.button === 2){
+            var ttt = e.path[0]
+            if (ttt.localName === 'td'){
+                if (ttt.children[1].textContent === 'P'){
+                    ttt.children[1].textContent = ''
+                }else {
+                    ttt.children[1].textContent = 'P'
+                }
+
+                for (var i = 0; i < tableHeight; i++) {
+                    for (var j = 0; j < tableWith; j++) {
+                        var res = randomMethod(gLevel)
+                        if (res === 1) {
+                            arr[i][j] = 1;
+                        } else {
+                            arr[i][j] = 0;
+                        }
+                        var tdTemp = document.getElementById(j + '*' + i)
+                        var t0 = parseInt(tdTemp.firstChild.textContent)
+                        var t1 = tdTemp.children[1].textContent
+                        if (t0 === 1){
+                            if (t1 !== 'p'){
+                                isWin = false
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        e.preventDefault();
+        if (isWin){
+            // alert("666")
+        }
+        isWin = true
+    });
+
+
+    function test() {
+        var t = document.getElementsByTagName('input')[0]
+        debugger
+        if (t.value === ''){
+            t.value = 15
+        }
+        if (parseInt(t.value) >= tableWith || parseInt(t.value) <= 5){
+            t.value = 15
+        }
+        gLevel = parseInt(t.value)
+        t.disabled = true
+    }
+
+</script>
+</body>
+
+</html>
