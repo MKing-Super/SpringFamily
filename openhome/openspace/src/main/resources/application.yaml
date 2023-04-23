@@ -33,5 +33,6 @@ spring:
 
 server:
   port: 9999
+debug: true
 
 

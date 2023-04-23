@@ -1,39 +1,35 @@
 package pers.mk.opspace;
 
-import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.Banner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.SpringBootVersion;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.*;
-import org.springframework.beans.*;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ResourceLoader;
 
 import java.io.PrintStream;
-import java.lang.reflect.Method;
 
 /**
  * @author MK
  */
 @Slf4j
-@SpringBootApplication
+@EnableAutoConfiguration
+@ComponentScan
+//@SpringBootApplication 可以用 @EnableAutoConfiguration 和 @ComponentScan 替代
 public class OpenspaceApplication {
     private static final String[] BANNER = {
-            "----------------------------------------" ,
-            ">>>>>>>>>>>>>>>> BANNER >>>>>>>>>>>>>>>>" ,
-            ">>>>>>>>>>>>>>>> BANNER >>>>>>>>>>>>>>>>" ,
-            ">>>>>>>>>>>>>>>> BANNER >>>>>>>>>>>>>>>>" ,
+            "----------------------------------------",
+            ">>>>>>>>>>>>>>>> BANNER >>>>>>>>>>>>>>>>",
+            ">>>>>>>>>>>>>>>> BANNER >>>>>>>>>>>>>>>>",
+            ">>>>>>>>>>>>>>>> BANNER >>>>>>>>>>>>>>>>",
             "----------------------------------------"};
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(OpenspaceApplication.class);
         app.setBannerMode(Banner.Mode.CONSOLE);
-        Banner banner = new Banner(){
+        Banner banner = new Banner() {
             @Override
             public void printBanner(Environment environment, Class<?> sourceClass, PrintStream out) {
                 for (String line : BANNER) {
