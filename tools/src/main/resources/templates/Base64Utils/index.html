@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Base64Utils~</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+
+加密：<input type="text" id="encode"><button id="encode_but">加密</button>
+<hr/>
+解密：<input type="text" id="decode"><button id="decode_but">解密</button>
+
+
+<script type="text/javascript">
+    $("#encode_but").click(function () {
+        $.ajax({
+            url:"/Base64Utils/encode",
+            async: false,
+            data:{
+                "encodeStr":$("#encode").val()
+            },
+            success:function(data){
+                alert(data)
+            }
+        });
+    });
+
+    $("#decode_but").click(function () {
+        $.ajax({
+            url:"/Base64Utils/decode",
+            async: false,
+            data:{
+                "decodeStr":$("#decode").val()
+            },
+            success:function(data){
+                alert(data)
+            }
+        });
+    });
+
+    $(function(){
+
+    });
+</script>
+</body>
+</html>
