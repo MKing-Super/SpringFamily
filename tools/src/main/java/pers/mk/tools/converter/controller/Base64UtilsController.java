@@ -1,10 +1,12 @@
 package pers.mk.tools.converter.controller;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import pers.mk.tools.converter.service.AccountService;
 
 import java.nio.charset.StandardCharsets;
 
@@ -20,6 +22,17 @@ import java.nio.charset.StandardCharsets;
 @Controller
 @RequestMapping("/Base64Utils")
 public class Base64UtilsController {
+
+    @Autowired
+    private AccountService accountService;
+
+    @RequestMapping("/test")
+    @ResponseBody
+    public String test(){
+        String method = accountService.getMethod();
+        System.out.println(method);
+        return method;
+    }
 
     @RequestMapping("/index")
     public String index(){

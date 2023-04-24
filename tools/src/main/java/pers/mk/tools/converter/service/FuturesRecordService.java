@@ -8,4 +8,6 @@ public interface FuturesRecordService {
 
     FuturesRecord selectById(Integer id);
 
+    String getMethod();
+
 }

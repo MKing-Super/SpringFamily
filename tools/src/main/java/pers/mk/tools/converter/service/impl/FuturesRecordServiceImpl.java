@@ -9,11 +9,16 @@ import pers.mk.tools.converter.service.FuturesRecordService;
 import javax.annotation.Resource;
 @Service
 public class FuturesRecordServiceImpl implements FuturesRecordService {
-    @Autowired
+//    @Autowired
     private FuturesRecordMapper futuresRecordMapper;
 
     @Override
     public FuturesRecord selectById(Integer id) {
         return futuresRecordMapper.selectById(id);
+    }
+
+    @Override
+    public String getMethod() {
+        return "My position is FuturesRecordServiceImpl~";
     }
 }
