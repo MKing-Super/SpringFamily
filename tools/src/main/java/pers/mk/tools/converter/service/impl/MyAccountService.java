@@ -1,5 +1,7 @@
 package pers.mk.tools.converter.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import pers.mk.tools.converter.service.AccountService;
 import pers.mk.tools.converter.service.FuturesRecordService;
@@ -14,6 +16,7 @@ import pers.mk.tools.converter.service.FuturesRecordService;
  */
 @Service
 public class MyAccountService implements AccountService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MyAccountService.class);
 
     private final FuturesRecordService futuresRecordService;
 
@@ -26,7 +29,7 @@ public class MyAccountService implements AccountService {
     @Override
     public String getMethod() {
         String method = futuresRecordService.getMethod();
-        System.out.println(method);
+        LOGGER.warn("我炸了");
         return method;
     }
 }
