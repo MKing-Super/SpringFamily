@@ -11,11 +11,25 @@
         http://www.springframework.org/schema/aop
         http://www.springframework.org/schema/aop/spring-aop.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/tx/spring-tx.xsd"
+        default-autowire="byName">
 
-    <bean id="deomModel" class="pers.mk.api.model.DemoModel">
-        <property name="username" value="mk"/>
-        <property name="password" value="123"/>
+    <bean id="service1" class="pers.mk.api.model.DIModel$Service1">
+        <property name="desc" value="service1"/>
     </bean>
+    <bean id="service2" class="pers.mk.api.model.DIModel$Service2">
+        <property name="desc" value="service2"/>
+    </bean>
+    <bean id="service2-1" class="pers.mk.api.model.DIModel$Service2">
+        <property name="desc" value="service2-1"/>
+    </bean>
+
+    <bean id="di1" class="pers.mk.api.model.DIModel" autowire="byName"/>
+    <bean id="di2" class="pers.mk.api.model.DIModel" autowire="byType">
+        <property name="service1" ref="service1"/>
+        <property name="service2" ref="service2-1"/>
+    </bean>
+    <bean id="di3" class="pers.mk.api.model.DIModel" autowire="constructor"/>
+    <bean id="di4" class="pers.mk.api.model.DIModel" autowire="default"/>
 
 </beans>

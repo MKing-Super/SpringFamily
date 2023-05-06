@@ -17,8 +17,14 @@ public class Test {
     public static void main(String[] args) {
         String path = "classpath:/config/learn-beans.xml";
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(path);
-        DemoModel deomModel = context.getBean("deomModel", DemoModel.class);
-        System.out.println(JSON.toJSONString(deomModel));
+        Object di1 = context.getBean("di1");
+        Object di2 = context.getBean("di2");
+        Object di3 = context.getBean("di3");
+        Object di4 = context.getBean("di4");
+        System.out.println(JSON.toJSONString(di1));
+        System.out.println(JSON.toJSONString(di2));
+        System.out.println(JSON.toJSONString(di3));
+        System.out.println(JSON.toJSONString(di4));
     }
 
 }
