@@ -2,6 +2,7 @@ package pers.mk.tools.converter.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pers.mk.tools.converter.service.AccountService;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * @describe: TODO
@@ -23,18 +25,19 @@ import java.nio.charset.StandardCharsets;
 public class Base64UtilsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(Base64UtilsController.class);
 
-    private final AccountService accountService;
+    @Autowired
+    private List<AccountService> accountServiceList;
 
-    public Base64UtilsController(AccountService yourAccountService) {
-        this.accountService = yourAccountService;
-    }
 
     @RequestMapping("/test")
     @ResponseBody
     public String test() {
-        String method = accountService.getMethod();
-        LOGGER.warn("Base64UtilsController result -> {}", method);
-        return method;
+        String result = "";
+        for (AccountService as : accountServiceList){
+            result += as.getMethod();
+        }
+        LOGGER.warn("Base64UtilsController result -> {}", result);
+        return result;
     }
 
     @RequestMapping("/index")
