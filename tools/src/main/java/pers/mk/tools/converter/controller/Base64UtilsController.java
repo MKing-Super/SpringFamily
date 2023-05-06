@@ -25,8 +25,8 @@ public class Base64UtilsController {
 
     private final AccountService accountService;
 
-    public Base64UtilsController(AccountService accountService) {
-        this.accountService = accountService;
+    public Base64UtilsController(AccountService yourAccountService) {
+        this.accountService = yourAccountService;
     }
 
     @RequestMapping("/test")
