@@ -3,6 +3,8 @@ package pers.mk.opspace.spring.di;
 import com.alibaba.fastjson.JSON;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import pers.mk.api.model.DemoModel;
+import pers.mk.api.model.Father;
+import pers.mk.api.model.Son1;
 
 /**
  * @describe: TODO
@@ -25,6 +27,13 @@ public class Test {
         System.out.println(JSON.toJSONString(di2));
         System.out.println(JSON.toJSONString(di3));
         System.out.println(JSON.toJSONString(di4));
+
+        String[] beanNamesForType = context.getBeanNamesForType(Son1.class);
+        for (String str : beanNamesForType){
+            Son1Listener bean = context.getBean(str, Son1Listener.class);
+            bean.onEvent(new Son1(null,"mk"));
+        }
+
     }
 
 }
