@@ -1,5 +1,7 @@
 package pers.mk.opspace.spring.di;
 
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.stereotype.Component;
 import pers.mk.api.model.Son1;
 
 /**
@@ -10,7 +12,8 @@ import pers.mk.api.model.Son1;
  * @Date 2023/5/8 11:02
  * @Version 1.0
  */
-public class Son1Event1 extends Son1 implements Son1Listener {
+@Component
+public class Son1Event1 extends Son1 implements SonListener<Son1> {
 
     @Override
     public void onEvent(Son1 son) {

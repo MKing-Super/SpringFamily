@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.core.env.Environment;
+import pers.mk.api.model.Son1;
 
 import java.io.PrintStream;
 
@@ -39,10 +40,12 @@ public class OpenspaceApplication {
             }
         };
         app.setBanner(banner);
-        ConfigurableApplicationContext run = app.run("server.port = 8080");
-        log.info(">>>>>>>>>>>>>>>> OpenspaceApplication Started >>>>>>>>>>>>>>>>>>");
-//        Object dataconfig = run.getBean("mkSqlSessionFactory");
-//        System.out.println(dataconfig);
+        ConfigurableApplicationContext run = app.run();
+        log.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>> OpenspaceApplication Started >>>>>>>>>>>>>>>>>>");
+        String[] beanNamesForType = run.getBeanNamesForType(Son1.class);
+        for (String str : beanNamesForType){
+            System.out.println(str);
+        }
 
     }
 }

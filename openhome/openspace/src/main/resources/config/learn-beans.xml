@@ -33,7 +33,7 @@
     <bean id="di4" class="pers.mk.api.model.DIModel" autowire="default"/>
 
 
-    <bean id="son1event1" class="pers.mk.opspace.spring.di.Son1Event1" autowire="constructor"/>
-    <bean id="son1event2" class="pers.mk.opspace.spring.di.Son1Event2" autowire="constructor"/>
+<!--    <bean id="son1event1" class="pers.mk.opspace.spring.di.Son1Event1" autowire="constructor"/>-->
+<!--    <bean id="son1event2" class="pers.mk.opspace.spring.di.Son1Event2" autowire="constructor"/>-->
 
 </beans>

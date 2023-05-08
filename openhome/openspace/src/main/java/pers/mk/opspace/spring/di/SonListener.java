@@ -10,8 +10,8 @@ import pers.mk.api.model.Son1;
  * @Date 2023/5/8 11:20
  * @Version 1.0
  */
-public interface Son1Listener {
+public interface SonListener<T> {
 
-    public void onEvent(Son1 son);
+    public void onEvent(T son);
 
 }

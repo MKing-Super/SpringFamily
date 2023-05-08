@@ -25,14 +25,14 @@ spring:
       static-locations: classpath:/static/,file:F://video
 
 # spring security
-  security:
-    user:
-      name: mk
-      password: 123
+#  security:
+#    user:
+#      name: mk
+#      password: 123
 
 
 server:
   port: 9999
-debug: true
+#debug: true
 
 

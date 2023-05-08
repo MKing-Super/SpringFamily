@@ -2,8 +2,6 @@ package pers.mk.opspace.spring.di;
 
 import com.alibaba.fastjson.JSON;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import pers.mk.api.model.DemoModel;
-import pers.mk.api.model.Father;
 import pers.mk.api.model.Son1;
 
 /**
@@ -30,7 +28,7 @@ public class Test {
 
         String[] beanNamesForType = context.getBeanNamesForType(Son1.class);
         for (String str : beanNamesForType){
-            Son1Listener bean = context.getBean(str, Son1Listener.class);
+            SonListener bean = context.getBean(str, SonListener.class);
             bean.onEvent(new Son1(null,"mk"));
         }
 
