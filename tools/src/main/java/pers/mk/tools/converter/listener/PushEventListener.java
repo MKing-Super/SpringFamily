@@ -1,7 +1,9 @@
 package pers.mk.tools.converter.listener;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
+import pers.mk.tools.converter.model.event.MsgEvent;
 import pers.mk.tools.converter.model.event.PushEvent;
 
 /**
@@ -16,13 +18,20 @@ import pers.mk.tools.converter.model.event.PushEvent;
 public class PushEventListener {
 
     @EventListener
+    @Order(0)
     public void demo1(PushEvent pushEvent){
-        System.out.println(this.getClass().getSimpleName()+ "::" +pushEvent.getMsg());
+        System.out.println(this.getClass().getSimpleName()+ "::第1" +pushEvent.getMsg());
     }
 
     @EventListener
+    @Order(1)
     public void demo2(PushEvent pushEvent){
-        System.out.println(this.getClass().getSimpleName()+ "::" +pushEvent.getMsg());
+        System.out.println(this.getClass().getSimpleName()+ "::第2" +pushEvent.getMsg());
+    }
+
+    @EventListener
+    public void demo3(MsgEvent msgEvent){
+        System.out.println("这里是msg：："  + msgEvent.getMsg());
     }
 
 }
