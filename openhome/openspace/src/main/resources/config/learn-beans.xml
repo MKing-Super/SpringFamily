@@ -14,21 +14,19 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd"
         default-autowire="byName">
 
+
     <bean id="service1" class="pers.mk.api.model.DIModel$Service1">
         <property name="desc" value="service1"/>
     </bean>
-    <bean id="service2" class="pers.mk.api.model.DIModel$Service2">
-        <property name="desc" value="service2"/>
+    <bean id="service2" class="pers.mk.api.model.DIModel$Service2" primary="true">
+        <property name="desc" value="service2-0"/>
     </bean>
-    <bean id="service2-1" class="pers.mk.api.model.DIModel$Service2">
+    <bean id="service2-1" class="pers.mk.api.model.DIModel$Service2" autowire-candidate="false">
         <property name="desc" value="service2-1"/>
     </bean>
 
     <bean id="di1" class="pers.mk.api.model.DIModel" autowire="byName"/>
-    <bean id="di2" class="pers.mk.api.model.DIModel" autowire="byType">
-        <property name="service1" ref="service1"/>
-        <property name="service2" ref="service2-1"/>
-    </bean>
+    <bean id="di2" class="pers.mk.api.model.DIModel" autowire="byType"/>
     <bean id="di3" class="pers.mk.api.model.DIModel" autowire="constructor"/>
     <bean id="di4" class="pers.mk.api.model.DIModel" autowire="default"/>
 
@@ -36,4 +34,12 @@
 <!--    <bean id="son1event1" class="pers.mk.opspace.spring.di.Son1Event1" autowire="constructor"/>-->
 <!--    <bean id="son1event2" class="pers.mk.opspace.spring.di.Son1Event2" autowire="constructor"/>-->
 
+
+    <bean id="service3" class="pers.mk.api.model.DIModel$Service3" autowire-candidate="false">
+        <property name="desc" value="service3"/>
+    </bean>
+
+    <bean id="son1" class="pers.mk.api.model.LazyModel" lazy-init="true">
+        <property name="msg" value="mkmk"/>
+    </bean>
 </beans>

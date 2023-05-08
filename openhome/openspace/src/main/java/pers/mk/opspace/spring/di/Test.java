@@ -2,6 +2,7 @@ package pers.mk.opspace.spring.di;
 
 import com.alibaba.fastjson.JSON;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import pers.mk.api.model.LazyModel;
 import pers.mk.api.model.Son1;
 
 /**
@@ -25,12 +26,10 @@ public class Test {
         System.out.println(JSON.toJSONString(di2));
         System.out.println(JSON.toJSONString(di3));
         System.out.println(JSON.toJSONString(di4));
+        System.out.println("------------------------------------------");
+        context.getBean(LazyModel.class);
 
-        String[] beanNamesForType = context.getBeanNamesForType(Son1.class);
-        for (String str : beanNamesForType){
-            SonListener bean = context.getBean(str, SonListener.class);
-            bean.onEvent(new Son1(null,"mk"));
-        }
+
 
     }
 
