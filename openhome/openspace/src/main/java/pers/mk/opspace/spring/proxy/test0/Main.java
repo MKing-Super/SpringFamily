@@ -1,7 +1,7 @@
 package pers.mk.opspace.spring.proxy.test0;
 
 /**
- * @describe: 简易的代理方案
+ * @describe: 简易的代理方案，解决方法耗时的统计问题
  * @Author MK
  * @PackageName openhome
  * @Package pers.mk.opspace.spring.proxy
