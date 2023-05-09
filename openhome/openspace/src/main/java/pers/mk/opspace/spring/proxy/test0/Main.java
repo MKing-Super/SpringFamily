@@ -1,7 +1,7 @@
-package pers.mk.opspace.spring.proxy;
+package pers.mk.opspace.spring.proxy.test0;
 
 /**
- * @describe: TODO
+ * @describe: 简易的代理方案
  * @Author MK
  * @PackageName openhome
  * @Package pers.mk.opspace.spring.proxy
