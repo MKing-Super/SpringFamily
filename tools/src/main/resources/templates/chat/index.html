@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>char ai</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<input type="text" id="encode"><button id="encode_but">加密</button>
+
+
+<script type="text/javascript">
+    $("#encode_but").click(function () {
+        $.ajax({
+            url:"/chat-ai/talk",
+            async: false,
+            data:{
+                "content":$("#encode").val()
+            },
+            success:function(data){
+                alert(data)
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
