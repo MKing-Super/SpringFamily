@@ -30,7 +30,7 @@ import java.util.*;
 public class ChatAiController {
 
     private static String authorization =
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InVpZCI6IjY0OWJhYjVmOWU1NDc0ZTc4MzAzZWZlNSIsInZlcnNpb24iOjAsInZpcFZlcnNpb24iOjAsImJyYW5jaCI6InpoIn0sImlhdCI6MTY4ODUyMTUxMywiZXhwIjoxNjg4Njk0MzEzfQ.xOoJKkPRQOTPXxPZ_G9NuLsi73m9nOB8eG7slPtYbmI";
+            "Bearer ";
     private static int contentLength;
 
     @RequestMapping("/index")
@@ -47,7 +47,7 @@ public class ChatAiController {
         try {
             content = content.trim();
             Map<String, Object> paramMap = new HashMap<>();
-            paramMap.put("conversationId","64a533a00ff484e0ecade463");
+            paramMap.put("conversationId","64a537a20ff484e0ecaeae64");
             paramMap.put("prompt",content);
             JSONObject obj = JSONUtil.createObj();
             obj.putAll(paramMap);
