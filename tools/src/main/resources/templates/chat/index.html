@@ -4,6 +4,18 @@
     <meta charset="UTF-8">
     <title>char ai</title>
     <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,6 +26,19 @@
 
 <input type="text" id="prompt"><button id="encode_but">send</button><button id="clear_but">clear</button>
 
+
+<table border="1">
+    <tr>
+        <td id="return_content">
+
+        </td>
+        <td id="pronunciation">
+<!--            <video controls="" autoplay="" name="media">-->
+<!--                <source src="https://dict.youdao.com/dictvoice?audio=I%20am%20Chinese&le=en" type="audio/mpeg">-->
+<!--            </video>-->
+        </td>
+    </tr>
+</table>
 
 <script type="text/javascript">
 
@@ -39,7 +64,9 @@
                 "prompt":$("#prompt").val()
             },
             success:function(data){
-                alert(data)
+                clearVideo()
+                $("#return_content").text(data)
+                createVideo(data)
             }
         });
     });
@@ -67,6 +94,40 @@
             }
         });
     });
+
+    function clearVideo() {
+        // 获取指定的td元素
+        var tdElement = document.getElementById("pronunciation");
+
+// 获取td元素下的所有video元素
+        var videoElements = tdElement.getElementsByTagName("video");
+
+// 检查是否存在video元素
+        if (videoElements.length > 0) {
+            // 删除第一个video元素
+            tdElement.removeChild(videoElements[0]);
+        }
+    }
+
+    function createVideo(data) {
+        data = data.replace(/ /g, "%20")
+        var srcStr = 'https://dict.youdao.com/dictvoice?audio='+data+'&le=en'
+
+        var video = document.createElement("video");
+        video.controls = true;
+        video.autoplay = true
+        video.name = "media"
+        video.id = "mediaVideo"
+
+        var source = document.createElement("source");
+        source.src = srcStr
+        source.type = "audio/mpeg"
+
+        var tdElement = document.getElementById("pronunciation");
+        tdElement.appendChild(video);
+        var videoElement = document.getElementById("mediaVideo");
+        videoElement.appendChild(source);
+    }
 
 </script>
 
