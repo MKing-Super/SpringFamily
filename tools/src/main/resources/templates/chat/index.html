@@ -15,6 +15,9 @@
             text-align: left;
             border-bottom: 1px solid #ddd;
         }
+        #prompt {
+            width: 80%;
+        }
     </style>
 </head>
 <body>
@@ -24,8 +27,10 @@
 <button id="check_key_but" >查看关键数据</button>
 <hr/>
 
-<input type="text" id="prompt"><button id="encode_but">send</button><button id="clear_but">clear</button>
-
+<input type="text" id="prompt">
+<button id="send_but">send</button>
+<button id="clear_but">clear</button>
+<hr/>
 
 <table border="1">
     <tr>
@@ -56,7 +61,11 @@
         });
     });
 
-    $("#encode_but").click(function () {
+    $("#send_but").click(function () {
+        var button = document.getElementById("send_but");
+        button.disabled = true;
+        button.textContent = 'stop'
+
         $.ajax({
             url:"/chat-ai/talk",
             async: false,
@@ -67,6 +76,9 @@
                 clearVideo()
                 $("#return_content").text(data)
                 createVideo(data)
+
+                button.disabled = false
+                button.textContent = 'send'
             }
         });
     });
