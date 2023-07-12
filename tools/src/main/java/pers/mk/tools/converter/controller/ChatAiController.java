@@ -7,6 +7,10 @@ import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
+import com.jacob.activeX.ActiveXComponent;
+import com.jacob.com.Dispatch;
+import com.jacob.com.Variant;
+import com.sun.speech.freetts.Voice;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.sun.speech.freetts.VoiceManager;
 
 /**
  * @describe: TODO
@@ -167,5 +173,43 @@ public class ChatAiController {
         return JSON.toJSONString(map);
     }
 
+
+    public static void main(String[] args) {
+//        windows();
+        freeTTS();
+    }
+
+    private static void windows(){
+        //调用windowsApi 的 com组件，Sapi.spVoice是 windows com组件名称
+        ActiveXComponent activeXComponent = new ActiveXComponent("Sapi.SpVoice");
+        //从com组件中获得调度目标
+        Dispatch dis = activeXComponent.getObject();
+        try {
+            //设置语言组件属性
+            activeXComponent.setProperty("Volume", new Variant(100));
+            activeXComponent.setProperty("Rate", new Variant(-1));
+            Dispatch.call(dis, "Speak", new Variant("今天天气不错，风和日丽的。"));
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            dis.safeRelease();
+            activeXComponent.safeRelease();
+        }
+    }
+
+    private static void freeTTS(){
+        System.setProperty("freetts.voices", "com.sun.speech.freetts.en.us.cmu_us_kal.KevinVoiceDirectory");
+        // 初始化 FreeTTS 引擎
+        VoiceManager voiceManager = VoiceManager.getInstance();
+        Voice voice = voiceManager.getVoice("kevin16");
+        voice.allocate();
+
+        // 合成语音
+        String text = "Hello, World!";
+        voice.speak(text);
+
+        // 释放资源
+        voice.deallocate();
+    }
 
 }
