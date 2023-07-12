@@ -6,6 +6,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -92,19 +93,19 @@ public class ChatAiController {
                     .execute();
             String body = execute.body();
             String[] sss = body.split("_e79218965e_");
+            log.info(body);
             String result = "";
             for (String str : sss) {
                 JSONObject jsonObject = JSONUtil.parseObj(str);
                 JSONObject data = jsonObject.get("data", JSONObject.class);
                 Integer code = jsonObject.get("code", Integer.class);
                 String content = data.get("content", String.class);
-                if (content == null) {
-                    continue;
-                }
                 if (code == 5001){
                     conversationId = data.get("conversationId", String.class);
                 }
-                result += content;
+                if (StrUtil.isNotBlank(content)){
+                    result += content;
+                }
             }
             return result;
         } catch (Exception e) {
@@ -119,7 +120,7 @@ public class ChatAiController {
 
     @RequestMapping("/delete")
     @ResponseBody
-    public JSONObject delete() {
+    public String delete() {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("conversationId", conversationId);
         JSONObject obj = JSONUtil.createObj();
@@ -153,8 +154,17 @@ public class ChatAiController {
                 .header(headers)
                 .body(reqStr)
                 .execute();
-        String body = execute.body();
-        return JSONUtil.parseObj(body);
+        conversationId = "";
+        return execute.body();
+    }
+
+    @RequestMapping("/check-key")
+    @ResponseBody
+    public String checkKey(){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("conversationId",conversationId);
+        map.put("authorization",authorization);
+        return JSON.toJSONString(map);
     }
 
 

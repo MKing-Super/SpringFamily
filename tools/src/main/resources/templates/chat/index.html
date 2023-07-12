@@ -7,22 +7,67 @@
 </head>
 <body>
 
-<input type="text" id="encode"><button id="encode_but">加密</button>
+<input type="text" id="token" class="token"><button id="token_but" class="token">token设置</button>
+<button id="delete_but" class="delete ">删除本次会话</button>
+<button id="check_key_but" >查看关键数据</button>
+<hr/>
+
+<input type="text" id="prompt"><button id="encode_but">send</button><button id="clear_but">clear</button>
 
 
 <script type="text/javascript">
+
+    $("#token_but").click(function () {
+        $.ajax({
+            url:"/chat-ai/token",
+            async: false,
+            data:{
+                "token":$("#token").val()
+            },
+            success:function(data){
+                $(".token").hide();
+                alert(data)
+            }
+        });
+    });
+
     $("#encode_but").click(function () {
         $.ajax({
             url:"/chat-ai/talk",
             async: false,
             data:{
-                "content":$("#encode").val()
+                "prompt":$("#prompt").val()
             },
             success:function(data){
                 alert(data)
             }
         });
     });
+
+    $("#clear_but").click(function (){
+        $("#prompt").val('')
+    });
+
+    $("#delete_but").click(function () {
+        $.ajax({
+            url:"/chat-ai/delete",
+            async: false,
+            success:function(data){
+                alert(data)
+            }
+        });
+    });
+
+    $("#check_key_but").click(function () {
+        $.ajax({
+            url:"/chat-ai/check-key",
+            async: false,
+            success:function(data){
+                alert(data)
+            }
+        });
+    });
+
 </script>
 
 </body>
