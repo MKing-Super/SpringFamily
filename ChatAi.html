@@ -253,8 +253,6 @@
         paramMap.set('conversationId', conversationId)
         let obj = Object.fromEntries(paramMap);
         let reqStr = JSON.stringify(obj);
-        console.log('reqStr:', reqStr);
-        contentLength = getUTF8ByteLength(conversationId)
 
         const headers = {
             'Accept': '*/*',
@@ -262,7 +260,7 @@
             'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
             'Authorization': 'Bearer ' + authorization,
             'Connection': 'keep-alive',
-            'Content-Length': contentLength.toString(),
+            'Content-Length': 45,
             'Content-Type': 'application/json;charset=UTF-8',
             'Host': 'wetabchat.haohuola.com',
             'Origin': 'chrome-extension://bpelnogcookhocnaokfpoeinibimbeff',
@@ -280,7 +278,7 @@
             'sec-ch-ua-platform': "\"Windows\""
         };
 
-        fetch('https://wetabchat.haohuola.com/api/chat/conversation-v2', {
+        fetch('https://wetabchat.haohuola.com/api/chat/delete', {
             method: 'POST',
             headers: headers,
             body: reqStr
