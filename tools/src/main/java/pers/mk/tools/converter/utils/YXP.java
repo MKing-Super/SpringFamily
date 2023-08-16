@@ -1,4 +1,4 @@
-package pers.mk.tools.converter.controller;
+package pers.mk.tools.converter.utils;
 
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
@@ -7,15 +7,18 @@ import org.jsoup.nodes.Document;
 
 import java.util.HashMap;
 
-
-public class InsectController {
-
-    private static String id = "5277249";
-    private static String crykey = "596010";
+/**
+ * @describe: TODO
+ * @Author MK
+ * @PackageName tools
+ * @Package pers.mk.tools.converter.utils
+ * @Date 2023/8/16 13:19
+ * @Version 1.0
+ */
+public class YXP {
 
     public static void main(String[] args) {
-
-        String url = "https://www.youxinpai.com/home/trade/detail/" + id + "/" + crykey;
+        String url = "https://www.youxinpai.com/home/trade/detail/5275886/8960e9";
         HashMap<String, String> heads = dealHeads();
         HttpResponse execute = HttpRequest.get(url)
                 .headerMap(heads, false)
@@ -34,7 +37,7 @@ public class InsectController {
         HashMap<String, String> map = new HashMap<>();
         String reqStr = "authority: www.youxinpai.com\n" +
                 "method: GET\n" +
-                "path: /home/trade/detail/" + id + "/" + crykey + "\n" +
+                "path: /home/trade/detail/5275886/8960e9\n" +
                 "scheme: https\n" +
                 "accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
                 "accept-encoding: gzip, deflate, br\n" +
