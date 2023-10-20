@@ -19,8 +19,8 @@ import java.util.Map;
  */
 public class Test {
 
-    private static String inPath = "D:/mk-gz3.csv";
-    private static String outPath = "D:/mk-gz3(.csv";
+    private static String inPath = "D:/mk.csv";
+    private static String outPath = "D:/mk-(result).csv";
     private static Integer errorTotal = 0;
 
 
@@ -67,7 +67,7 @@ public class Test {
                 }else {
                     arr1 = line.split("\",\"");
                     arr1[0] = arr1[0].split("\"")[1];
-                    arr1[arr1.length - 1] = arr1[arr1.length - 1].split("\"")[0];
+//                    arr1[arr1.length - 1] = arr1[arr1.length - 1].split("\"")[0];
                     for (int n = 0 ; n < arr0.length ; n++){
                         records.put(arr0[n],arr1[n]);
                     }
