@@ -10,7 +10,58 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @describe: TODO
+ * @describe:
+
+        SELECT
+        avi.model_id,
+        avi.reg_date,
+        avi.mile,
+        avi.register_province,
+        avi.register_city,
+        avi.level_id,
+        avi.color,
+        avi.star_skeleton,
+        avi.star_interior,
+        avi.star_facade,
+        avi.star_condition,
+        avi.star_electric,
+        avi.using_model,
+        avi.transfer_number,
+        avi.owner_current,
+        avi.vehicle_ppe,
+        avi.vehicle_src_type,
+        avi.vehicle_src_id,
+        avi.auction_province,
+        avi.auction_city,
+        avi.produced_years,
+        avi.auction_times,
+        avi.car_location,
+        avi.vehicle_margin,
+        avi.condition_level,
+        avi.star_prod,
+        avi.damage_cn,
+        avi.star_type_sum,
+        avi.create_time,
+
+
+        avi.b2b_price AS old_b2b_price,
+        avi.b2b_price_lower AS old_b2b_price_lower,
+        avi.b2b_price_upper AS old_b2b_price_upper,
+        oi.final_price,
+        avi.level_id,
+        vb.vehicle_id
+        FROM
+        autost_vas.valuation_business vb
+        INNER JOIN autost_vas.accurate_valuation_interface avi ON vb.valuation_interface_id = avi.id
+        INNER JOIN autost_auction.vehicle v ON v.id = vb.vehicle_id
+        INNER JOIN autost_auction.order_item oi ON oi.vehicle_id = v.id
+        WHERE
+        vb.valuation_type = 2
+        AND v.oil_type = '电力'
+        AND oi.deal_confirm_status = 2
+        AND avi.model_id IS NOT NULL
+        AND avi.create_time >= '2023-10-01 00:00:00'
+
  * @Author MK
  * @PackageName openhome
  * @Package pers.mk.opspace.java.io
