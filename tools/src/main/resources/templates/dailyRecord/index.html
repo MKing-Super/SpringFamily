@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>dailyRecord</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+<input type="text" id="title">
+<br/>
+<input type="text" id="content" style="width: 100%;">
+<!--<button onclick="copyToClipboard()">copy</button>-->
+<!--<hr/>-->
+<!--<button onclick="writeTxt()">submit</button>-->
+
+<script type="text/javascript">
+
+    function writeTxt() {
+        var title = document.getElementById('title').value
+        var content = document.getElementById('content').value
+        $.ajax({
+            url:"/dailyRecord/writeTxt",
+            async: false,
+            data:{
+                "title":title,
+                "content":content
+            },
+            success:function(data){
+                if (data === true){
+                    document.getElementById('title').disabled = true
+                    document.getElementById('content').value = ''
+                }else {
+                    alert(data)
+                }
+            }
+        });
+    }
+
+    function copyToClipboard() {
+        // 创建一个隐藏的textarea元素
+        const textarea = document.createElement('textarea');
+        textarea.value = document.getElementById('content').value;
+        document.body.appendChild(textarea);
+        // 选中文本
+        textarea.select();
+
+        try {
+            // 执行复制命令
+            const successful = document.execCommand('copy');
+            if (successful) {
+                // alert('内容已复制到剪贴板！');
+                console.log('内容已复制到剪贴板！')
+            } else {
+                alert('复制失败，请手动复制。');
+            }
+
+        } catch (err) {
+            alert('复制失败，请手动复制。错误: ' + err);
+        }
+
+        // 移除textarea元素
+        document.body.removeChild(textarea);
+    }
+
+    // 监听整个文档的keydown事件
+    document.addEventListener('keydown', function(event) {
+        // 检查按下的键是否是回车键
+        if (event.key === 'Enter') {
+            writeTxt()
+        }
+        // if (event.key === 'c'){
+        //     copyToClipboard()
+        // }
+        // alert(event.key)
+    });
+
+</script>
+
+</body>
+</html>
