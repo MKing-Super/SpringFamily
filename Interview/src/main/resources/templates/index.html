@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>welcome~</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+</head>
+<body>
+
+<div>
+    <form method="get">
+        <input type="text" id="custom" name="custom" th:value="${custom}" hidden>
+        <table border="2px;">
+            <tr>
+                <th colspan="2">
+                    新建feignService接口类名称转换：
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    原接口名称
+                </td>
+                <td>
+                    <input type="text" name="oldServiceName" autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    后缀
+                </td>
+                <td>
+                    <input type="text" name="feignServiceSuffix" value="FeignClient" required="required" autocomplete="off" >
+                </td>
+            </tr>
+
+            <tr>
+                <th colspan="2">
+                    SpringCloud的实体类名称转换：
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    实体类名称
+                </td>
+                <td>
+                    <input type="text" name="className" autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    接口方法名称
+                </td>
+                <td>
+                    <input type="text" name="interfaceMethodName" autocomplete="off">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    后缀
+                </td>
+                <td>
+                    <input type="text" name="interfaceMethodSuffix" required="required" value="Wrapper" autocomplete="off">
+                </td>
+            </tr>
+
+            <tr>
+                <th colspan="2">
+                    SpringCloud的接口方法名称转换：
+                </th>
+            </tr>
+            <tr>
+                <td>
+                    后缀
+                </td>
+                <td>
+                    <input type="text" name="feignSuffix" required="required" value="Feign" autocomplete="off">
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <input type="submit" style="width: 77%;height: 70px;background-color: pink " value="转换" onclick="sub(this)">
+                    <input type="reset" style="width: 20%;height: 70px;background-color: bisque " value="重置">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+
+<hr/>
+
+<table border="1px;" style="width: 460px;margin: 0!important;">
+        <tr>
+            <th>
+                标准feignService接口类名称：
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz0" th:value="${feignServiceResult}" style="width: 97%;" onclick="copybz0()">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                标准path名称
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz1" th:value="${path}" style="width: 97%;" onclick="copybz1()">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                标准SpringCloud的实体类名称
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz2" th:value="${result}" style="width: 97%;" onclick="copybz2()">
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                标准SpringCloud的接口方法名称
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="bz3" th:value="${interfaceResult}" style="width: 97%;" onclick="copybz3()">
+            </td>
+        </tr>
+
+
+        <tr>
+            <th>
+                常用字段
+            </th>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="cy0" value='@RequestMapping(value = "/xxx",method = RequestMethod.xxx)' style="width: 97%;" onclick="copycy0()">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" value="@RestController" id="cy1" style="width: 97%;" onclick="copycy1()">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="text" id="cy2" style="width: 97%;" onclick="copycy2()">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="cy3" onclick="copycy3()" style="width: 470px;">@com.alibaba.dubbo.config.annotation.Service(version="1.0.0", interfaceClass= xxxxxxx.class)
+                </textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input id="cy4" onclick="copycy4()" style="width: 470px;"/>
+            </td>
+        </tr>
+    </table>
+
+
+
+<script type="text/javascript">
+    window.onload = function () {
+        var custom = document.getElementById('custom').value;
+        if (custom !== ''){
+            var cy2 = document.getElementById('cy2');
+            var cy4 = document.getElementById('cy4');
+            cy2.value = '@RequestMapping("/' + custom + '/xxxxxx")';
+            cy4.value = '@FeignClient(name="zuul-service", path="/biz-' + custom +'-service/' + custom + '/xxxxxx")';
+        }
+    }
+
+    function sub(data) {
+        var custom = document.getElementById('custom');
+        var val = custom.value;
+        data.form.action = '/' + val;
+    }
+    function copybz0(){
+        var oInput = document.getElementById("bz0");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copybz1(){
+        var oInput = document.getElementById("bz1");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copybz2(){
+        var oInput = document.getElementById("bz2");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copybz3(){
+        var oInput = document.getElementById("bz3");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+
+    function copycy0(){
+        var oInput = document.getElementById("cy0");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy1(){
+        var oInput = document.getElementById("cy1");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy2(){
+        var oInput = document.getElementById("cy2");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy3(){
+        var oInput = document.getElementById("cy3");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+    function copycy4(){
+        var oInput = document.getElementById("cy4");
+        oInput.select();
+        document.execCommand("Copy");
+    }
+
+    $(function(){
+
+    });
+</script>
+</body>
+</html>

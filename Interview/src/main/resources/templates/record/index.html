@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+</head>
+<body>
+<form action="/record/detail" method="get">
+    <label for="recordDate"></label><input type="date" id="recordDate" name="recordDate">
+    <input type="submit" id="submit" value="查看">
+    <br/>
+    <input type="text" id="nowPrice" disabled>
+</form>
+<script type="text/javascript">
+    setInterval(function () {
+        $.ajax({
+            url:"/record/now-price",
+            async: false,
+            success:function(data){
+                $("#nowPrice").val(data);
+            }
+        });
+    },5000);
+
+    $(function (){
+        $("#save").click(function (){
+            let serialize = $("#detail-form").serialize();
+            $.ajax({
+                url:"/record/detail-save",
+                data:serialize,
+                success:function(data){
+                    $("#result").text(data)
+                }
+            });
+        });
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<script type="text/javascript" th:src="@{/js/jquery-1.8.3.js}"></script>
+<script src="https://cdn.staticfile.org/echarts/4.3.0/echarts.min.js"></script>
+
+<body>
+<div id="main" style="width: 100%;height:800px;margin: auto"></div>
+<input type="button" id="stop" value="暂停" onclick="chartStop()">
+<a href="/chart/index000">静态折线图</a>
+<input type="number" id="y-length">
+<input type="button" onclick="setYlength()" value="设置">
+<br/>
+<label id="total-profit"></label>
+<br/>
+<input type="button" onclick="up()" value="↑↑↑↑↑↑">
+<label id="up-profit"></label>
+<br/>
+<input type="button" onclick="down()" value="↓↓↓↓↓↓">
+<label id="down-profit"></label>
+</body>
+
+</html>
+<script type="text/javascript">
+    var stop = 1;
+    //y轴的长度
+    var ylength = 50;
+
+    function chartStop() {
+        if (stop === 1){
+            stop = 0
+            $("#stop").val('开始')
+        }else {
+            stop = 1
+            $("#stop").val('暂停')
+        }
+    }
+
+    function up() {
+        $.ajax({
+            url:"/chart/up",
+            async: false,
+            data:{"price":value},
+            success:function(data){
+
+            }
+        });
+    }
+
+    function down() {
+        $.ajax({
+            url:"/chart/down",
+            async: false,
+            data:{"price":value},
+            success:function(data){
+
+            }
+        });
+    }
+
+    function setYlength() {
+        var val = $("#y-length").val();
+        if (val !== ""){
+            ylength = val
+            // location.reload()
+        }
+    }
+
+    function getData() {
+        var result = null;
+        $.ajax({
+            url:"/chart/getData",
+            async: false,
+            success:function(map){
+                result = map.nowPrice;
+                $("#up-profit").text(map.upProfit);
+                $("#down-profit").text(map.downProfit);
+                $("#total-profit").text(map.totalProfit);
+            }
+        });
+        while (true){
+            if (result !== null){
+                return result
+            }
+        }
+    }
+
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    function randomData() {
+        now = new Date(+now + oneDay);
+        value = getData();
+        // value = value + Math.random() * 21 - 10;
+        return {
+            name: now.toString(),
+            value: [
+                [now.getFullYear(), now.getMonth() + 1, now.getDate()].join('/'),
+                Math.round(value)
+            ]
+        }
+    }
+    var data = [];
+    var now = +new Date(1997, 9, 3);
+    var oneDay = 24 * 3600 * 1000;
+    var value = 5500;
+    for(var i = 0; i < ylength; i++) {
+        data.push(randomData());
+    }
+    option = {
+        title: {
+            text: '动态数据 + 时间坐标轴'
+        },
+        tooltip: {
+            trigger: 'axis',
+            formatter: function(params) {
+                params = params[0];
+                var date = new Date(params.name);
+                return date.getFullYear() + '/' + (date.getMonth() + 1) + '/' + date.getDate() + '/'  + ' : ' + params.value[1];
+            },
+            axisPointer: {
+                animation: false
+            }
+        },
+        xAxis: {
+            type: 'time',
+            splitLine: {
+                show: false
+            }
+        },
+        yAxis: {
+            type: 'value',
+            boundaryGap: [0, '1%'],
+            splitLine: {
+                show: false
+            }
+        },
+        series: [
+            {
+            name: '模拟数据',
+            type: 'line',
+            showSymbol: false,
+            hoverAnimation: false,
+            data: data,
+            markLine: {
+                itemStyle: {
+                    normal: {
+                        borderWidth: 1,
+                        lineStyle: {
+                            type: "dash",
+                            color: 'red',
+                            width: 2
+                        },
+                        label: {
+                            formatter: 'COD',
+                            textStyle: {
+                                fontSize: 16,
+                                fontWeight: "bolder"
+                            }
+                        },
+                        show: true,
+                        color: '#4c5336'
+                    }
+                },
+                data: [{
+                    yAxis: 5500
+                }]
+            },
+        }],
+    };
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+    setInterval(function() {
+        for(var i = 0; i < stop; i++) {
+            data.shift();
+            data.push(randomData());
+        }
+        myChart.setOption({
+            series: [{
+                data: data
+            }]
+        });
+    }, 1000);
+</script>
