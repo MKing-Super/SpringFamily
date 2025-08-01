@@ -1,21 +1,21 @@
 package pers.mk.interview.a;
 
 import java.time.LocalDateTime;
-
+/*
+sleep和wait区别
+ */
 public class Java05 {
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("-------- sleep() 示例");
         // sleep() 示例
         System.out.println("程序开始，当前时间: " + LocalDateTime.now());
-
         try {
             // 主线程休眠3秒
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
         System.out.println("3秒后，当前时间: " + LocalDateTime.now());
 
         // 多个线程使用sleep()
