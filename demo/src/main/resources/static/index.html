@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Spring Boot Demo</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<h1>最简单的 Spring Boot 前后端交互</h1>
+<button onclick="callApi()">调用后端接口</button>
+<p id="result"></p>
+
+<script>
+    function callApi() {
+        axios.get('/api/hello')
+            .then(response => {
+                document.getElementById('result').innerText = response.data;
+            })
+            .catch(error => {
+                document.getElementById('result').innerText = 'Error: ' + error;
+            });
+    }
+</script>
+</body>
+</html>
