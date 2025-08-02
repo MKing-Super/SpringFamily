@@ -92,7 +92,7 @@
 | notify()    | 唤醒一个等待线程 | 不释放锁 | 单个线程     | 可能导致信号丢失，不推荐优先使用 |
 | notifyAll() | 唤醒所有等待线程 | 不释放锁 | 所有等待线程 | 更安全，推荐优先使用             |
 
-#### 5.1 wait()为什么必须用while循环检查条件
+**5.1 wait()为什么必须用while循环检查条件**
 
 ​		**虚假唤醒**是指线程在没有收到`notify()`/`notifyAll()`调用的情况下，也可能从`wait()`状态中被唤醒。这是Java语言规范允许的行为，虽然不常见但确实存在。
 
@@ -126,6 +126,425 @@
 > p2被唤醒，从wait()出继续执行，生产1
 >
 > p2被唤醒，从wait()出继续执行（由于用if判断，没有获取buffer最新容量），生产2，此时buffer溢出异常
+
+
+
+### 6、什么是自动拆装箱 int和Integer有什么区别
+
+基本数据类型，如int,float,double,boolean,char,byte,不具备对象的特征，不能调用方法。
+
+1. 装箱：将基本类型转换成包装类对象
+2. 拆箱：将包装类对象转换成基本类型的值
+
+
+
+**java为什么要引入自动装箱和拆箱的功能？**
+
+主要是用于java集合中，List<Integer> list=new ArrayList<Integer>();
+
+list集合如果要放整数的话，只能放对象，不能放基本类型，因此需要将整数自动装箱成对象。
+
+实现原理：javac编译器的语法糖，底层是通过Integer.valueOf()和Integer.intValue()方法实现。
+
+区别：
+
+1. Integer是int的包装类，int则是java的一种基本数据类型
+2. Integer变量必须实例化后才能使用，而int变量不需要
+3. Integer实际是对象的引用，当new一个Integer时，实际上是生成一个指针指向此对象；而int则是直接存储数据值
+4. Integer的默认值是null，int的默认值是0
+
+
+
+### 7、==和equals区别
+
+1.==
+
+如果比较的是基本数据类型，那么比较的是变量的值
+
+如果比较的是引用数据类型，那么比较的是地址值（两个对象是否指向同一块内存）
+
+2.equals
+
+如果没重写equals方法比较的是两个对象的地址值
+
+如果重写了equals方法后我们往往比较的是对象中的属性的内容
+
+equals方法是从Object类中继承的，默认的实现就是使用==
+
+> `Object` 的 `equals` 默认是 `==`（比较内存地址）。
+>
+> `String` 重写了 `equals`，使其比较字符串内容而非内存地址。
+
+
+
+### 8、String能被继承吗 为什么用final修饰
+
+1. 不能被继承，因为String类有final修饰符，而final修饰的类是不能被继承的。
+2. String 类是最常用的类之一，为了效率，禁止被继承和重写。
+3. 为了安全。String 类中有native关键字修饰的调用系统级别的本地方法，调用了操作系统的 API，如果方法可以重写，可能被植入恶意代码，破坏程序。Java 的安全性也体现在这里。
+   
+
+### 9、String buffer和String builder区别
+
+1. StringBuffer 与 StringBuilder 中的方法和功能完全是等价的，
+2. 只是StringBuffer 中的方法大都采用了 synchronized 关键字进行修饰，因此是线程安全的，而 StringBuilder 没有这个修饰，可以被认为是线程不安全的。
+3. 在单线程程序下，StringBuilder效率更快，因为它不需要加锁，不具备多线程安全而StringBuffer则每次都需要判断锁，效率相对更低
+
+**为什么StringBuffer 中的方法大都采用了 synchronized 关键字进行修饰，就认为是线程安全的**
+
+**9.1`synchronized` 的作用**
+
+- `synchronized` 是 Java 提供的一种**同步机制**，可以确保同一时间只有一个线程能访问被修饰的方法或代码块。
+- 在 `StringBuffer` 中，几乎所有修改数据的方法（如 `append()`、`insert()`、`delete()` 等）都加了 `synchronized`，保证多线程环境下对内部数据的修改不会出现**竞态条件（Race Condition）**。
+
+**9.2 为什么 `StringBuffer` 需要线程安全**
+
+如果多个线程同时修改同一个 `StringBuffer`（例如拼接字符串），不加锁可能导致：
+
+- **数据不一致**（如部分写入的字符串被覆盖）。
+- **内存可见性问题**（一个线程的修改对另一个线程不可见）。
+
+通过 `synchronized`，`StringBuffer` 可以安全地在多线程环境中使用。
+
+**9.3`synchronized` 的代价**
+
+- 虽然 `StringBuffer` 是线程安全的，但 `synchronized` 会带来性能开销：
+  1. **锁竞争**：多线程争抢同一把锁时，会导致线程阻塞。
+  2. **内存屏障**：`synchronized` 会触发 JVM 的内存同步操作，影响指令重排序。
+- 因此，在不需要线程安全的场景下，`StringBuilder` 是更优选择。
+
+
+
+### 10、final、finally、finalize
+
+1. final：修饰符（关键字）有三种用法：修饰类、变量和方法。修饰类时，意味着它不能再派生出新的子类，即不能被继承，因此它和abstract是反义词。修饰变量时，该变量使用中不被改变，必须在声明时给定初值，在引用中只能读取不可修改，即为常量。修饰方法时，也同样只能使用，不能在子类中被重写。
+2. finally：通常放在try…catch的后面构造最终执行代码块，这就意味着程序无论正常执行还是发生异常，这里的代码只要JVM不关闭都能执行，可以将释放外部资源的代码写在finally块中。
+3. finalize：Object类中定义的方法，Java中允许使用finalize() 方法在垃圾收集器将对象从内存中清除出去之前做必要的清理工作。这个方法是由垃圾收集器在销毁对象时调用的，通过重写finalize() 方法可以整理系统资源或者执行其他清理工作。
+
+> `finalize()` 是 `Object` 类中的一个方法，用于在对象被垃圾回收（GC）之前执行一些清理操作（如释放系统资源）。
+
+**10.1 finalize关键问题与注意事项**
+
+1. **执行时机不确定**
+   - `finalize()` 由垃圾回收器调用，但 GC 的时间由 JVM 决定，甚至可能永远不会调用（如程序正常退出时）。
+2. **性能开销**
+   - 重写了 `finalize()` 的对象会被 JVM 特殊处理（放入 `Finalizer` 队列），导致垃圾回收延迟，可能引发内存泄漏。
+3. **异常吞没**
+   - `finalize()` 中的异常会被忽略，不会传播到调用线程。
+
+**10.2 为什么避免使用 `finalize()`**
+
+- **不可靠**：无法保证及时释放资源。
+- **性能差**：增加 GC 负担。
+- **复杂度高**：可能导致隐蔽的 bug（如复活对象）。
+
+**10.3 什么是GC**
+
+​		**GC（Garbage Collection，垃圾回收）** 是 Java 等编程语言中自动管理内存的机制，用于**回收不再使用的对象占用的内存**，防止内存泄漏（Memory Leak）并优化内存使用。
+
+**10.4 GC 的核心作用**
+
+- **自动释放内存**：回收程序中不再被引用的对象（即“垃圾”）。
+- **避免内存泄漏**：防止无用对象长期占用内存。
+- **减少程序员负担**：开发者无需手动释放内存
+
+
+
+### 11、Object中有哪些方法
+
+| 方法                                            | 作用                                                         |
+| ----------------------------------------------- | ------------------------------------------------------------ |
+| protected native Object clone()                 | 创建并返回此对象的一个副本。                                 |
+| public boolean equals(Object obj)               | 指示某个其他对象是否与此对象“相等                            |
+| protected void finalize()                       | 当垃圾回收器确定不存在对该对象的更多引用时，由对象的垃圾回收器调用此方法。 |
+| public final Class<? extends Object> getClass() | 返回一个对象的运行时类。获取运行类的相关信息                 |
+| public native int hashCode();                   | 返回该对象的哈希码值。                                       |
+| public final native void notify()               | 唤醒在此对象监视器上等待的单个线程。                         |
+| public final native void notifyAll();           | 唤醒在此对象监视器上等待的所有线程。                         |
+| public String toString()                        | 返回该对象的字符串表示。                                     |
+| public final native void wait()                 | 导致当前的线程等待，直到其他线程调用此对象的 notify() 方法或 notifyAll() 方，或者超过指定的时间量。 |
+
+**11.1 getClass() 与 `instanceof` 的区别**
+
+| 方法/操作符 | 作用                           | 示例                           |
+| ----------- | ------------------------------ | ------------------------------ |
+| getClass()  | 返回对象的运行时类             | obj.getClass() == String.class |
+| instanceof  | 检查对象是否属于某个类或其子类 | obj instanceof String          |
+
+> ```java
+> Object obj = "Hello";
+> System.out.println(obj.getClass() == Object.class); // false
+> System.out.println(obj.getClass() == String.class); // true
+> System.out.println(obj instanceof Object); // true
+> System.out.println(obj instanceof String); // true
+> System.out.println(obj instanceof Serializable); // true
+> ```
+>
+> 
+
+
+
+### 12、说一下集合体系
+
+**Collection（单列集合）**
+
+```
+Collection
+├── List（有序可重复）
+│   ├── ArrayList（动态数组，查询快，增删慢）
+│   └── LinkedList（双向链表，增删快，查询慢）
+│
+├── Set（无序不重复）
+│   ├── HashSet（基于 HashMap，无序，去重。快速去重）
+│   │   └── LinkedHashSet（保持插入顺序。有序去重）
+│   └── TreeSet（基于 TreeMap，自然排序。需要排序的集合）
+│
+└── Queue（队列）
+    ├── PriorityQueue（优先级队列）
+    ├── Deque（双端队列）
+    │   ├── ArrayDeque（数组实现）
+    │   └── LinkedList（链表实现）
+    └── BlockingQueue（阻塞队列，线程安全）
+        ├── ArrayBlockingQueue
+        ├── LinkedBlockingQueue
+        └── PriorityBlockingQueue
+```
+
+**Map（键值对集合）**
+
+```
+Map
+├── HashMap（基于哈希表（数组+链表/红黑树），无序）
+│   └── LinkedHashMap（保持插入顺序（链表+哈希表）。有序的Map）
+├── TreeMap（基于红黑树，自然排序）
+└── ConcurrentMap（线程安全）
+    ├── ConcurrentHashMap（高并发优化）
+    └── ConcurrentSkipListMap（跳表实现）
+```
+
+**12.1 `ArrayList` vs `LinkedList`？**
+
+- `ArrayList` 查询快（随机访问），`LinkedList` 增删快（头尾操作）。
+
+**12.2 HashMap` 的工作原理？**
+
+- 基于哈希表，使用 `hashCode()` 和 `equals()` 确定键的唯一性，冲突时转链表或红黑树。
+
+**12.3 如何保证集合线程安全？**
+
+- 使用 `Collections.synchronizedXXX()` 或并发集合（如 `ConcurrentHashMap`）。
+
+**12.4 `HashSet` 如何去重？**
+
+- 基于 `HashMap`，利用 `equals()` 和 `hashCode()` 判断重复。
+
+**12.5 哈希表的底层结构**
+
+- **数组 + 链表 + 红黑树（JDK 8+）**
+  - 默认情况下，每个桶是链表，但当链表长度 ≥ 8 时，转为红黑树（提高查询效率）。
+  - 如果红黑树节点数 ≤ 6，退化为链表。
+
+​		在哈希表（如 Java 的 `HashMap`）中，**桶（Bucket）** 是指哈希表中存储数据的基本单元，可以理解为数组中的一个位置（槽位）。每个桶对应一个哈希值或哈希值范围，用于存放哈希冲突的元素。
+
+​		默认情况下，每个桶是一个链表。
+
+```
+桶数组: [null, null, ["A"→1 → "B"→2], null, ...]
+              ↑
+            桶 2（链表结构）
+```
+
+​		当同一个桶中的链表长度 ≥ 8 时，链表会转换为红黑树，以提高查询效率（从 `O(n)` 优化到 `O(log n)`）。
+**触发条件**：
+
+- 链表长度 ≥ 8 **且** 哈希表总容量 ≥ 64。
+- 否则，仅进行扩容（不转树）
+
+**12.6 默认桶数组大小**
+
+如果数据量增长不确定，可以依赖 `HashMap` 的自动扩容机制（但会带来扩容开销）。
+
+```java
+// 默认初始容量 16，按需扩容
+Map<Integer, String> dynamicMap = new HashMap<>();
+```
+
+**12.6 如何合理设置桶数组大小？**
+
+如果知道大概的数据量 `N`，初始化容量可以设为 `N / loadFactor`（默认负载因子 `0.75`）。
+
+```java
+int expectedSize = 100_000;
+Map<String, Integer> map = new HashMap<>((int) (expectedSize / 0.75f));
+```
+
+
+
+### 13、ArrarList和LinkedList区别
+
+1. ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。
+2. 对于随机访问get和set，ArrayList效率优于LinkedList，因为LinkedList要移动指针。
+3. 对于新增和删除操作add和remove，LinkedList比较占优势，因为ArrayList要移动数据。 这一点要看实际情况的。若只对单条数据插入或删除，ArrayList的速度反而优于LinkedList。但若是批量随机的插入删除数据，LinkedList的速度大大优于ArrayList. 因为ArrayList每插入一条数据，要移动插入点及之后的所有数据。
+   
+
+### 14、HashMap底层是 数组+链表+红黑树，为什么要用这几类结构 
+
+1. 数组 Node<K,V>[] table ,哈希表，根据对象的key的hash值进行在数组里面是哪个节点
+2. 链表的作用是解决hash冲突，将hash值取模之后的对象存在一个链表放在hash值对应的槽位
+3. 红黑树 JDK8使用红黑树来替代超过8个节点的链表，主要是查询性能的提升，从原来的O(n)到O(logn),
+4. 通过hash碰撞，让HashMap不断产生碰撞，那么相同的key的位置的链表就会不断增长，当对这个Hashmap的相应位置进行查询的时候，就会循环遍历这个超级大的链表，性能就会下降，所以改用红黑树
+
+**14.1 红黑树为什么比链表效率高**
+
+1. 查询效率对比
+
+- **链表查询**：O(n)时间复杂度
+  - 最坏情况需要遍历整个链表
+  - 平均需要遍历n/2个节点
+- **红黑树查询**：O(log n)时间复杂度
+  - 利用二叉搜索树特性快速定位
+  - 100万个节点只需最多20次比较(log₂10⁶≈20)
+
+2. 插入/删除效率对比
+
+- **链表插入/删除**：O(1)找到位置 + O(n)查找
+  - 虽然插入操作本身是O(1)，但需要先O(n)查找位置
+- **红黑树插入/删除**：O(log n)
+  - 查找位置更快
+  - 需要额外O(1)时间维护平衡(旋转操作)
+
+
+
+### 15、HashMap和HashTable区别
+
+HashMap 和 HashTable 都是 Java 中基于哈希表的 Map 实现，但它们有几个关键区别：
+
+1. 线程安全性
+
+|                  | HashMap                                                      | HashTable                              |
+| ---------------- | ------------------------------------------------------------ | -------------------------------------- |
+| **线程安全**     | 非线程安全                                                   | 线程安全（方法使用 synchronized 修饰） |
+| **并发替代方案** | 可以使用 `ConcurrentHashMap` 或 `Collections.synchronizedMap()` | 无，本身就是同步的                     |
+
+2. 性能
+
+|          | HashMap                   | HashTable                      |
+| -------- | ------------------------- | ------------------------------ |
+| **性能** | 更高（无同步开销）        | 较低（同步方法调用有性能损耗） |
+| **优化** | JDK8+ 使用链表+红黑树结构 | 仅使用链表结构                 |
+
+3. null 值处理
+
+|           | HashMap          | HashTable                                     |
+| --------- | ---------------- | --------------------------------------------- |
+| **key**   | 允许一个 null 键 | 不允许 null 键（会抛出 NullPointerException） |
+| **value** | 允许多个 null 值 | 不允许 null 值                                |
+
+4. 继承关系
+
+|          | HashMap            | HashTable                   |
+| -------- | ------------------ | --------------------------- |
+| **父类** | 继承 `AbstractMap` | 继承 `Dictionary`（已过时） |
+| **接口** | 实现 `Map` 接口    | 实现 `Map` 接口             |
+
+5. 初始容量和扩容
+
+|                  | HashMap           | HashTable           |
+| ---------------- | ----------------- | ------------------- |
+| **默认初始容量** | 16                | 11                  |
+| **扩容方式**     | 2n（16→32→64...） | 2n+1（11→23→47...） |
+
+6. 迭代器
+
+|              | HashMap                              | HashTable                   |
+| ------------ | ------------------------------------ | --------------------------- |
+| **迭代器**   | `Iterator` 是快速失败（fail-fast）的 | `Enumerator` 不是快速失败的 |
+| **遍历方式** | 可以使用 `keySet()`、`entrySet()` 等 | 也可以使用但效率较低        |
+
+使用建议
+
+1. **单线程环境**：优先使用 `HashMap`（性能更好）
+2. **多线程环境**：
+   - 需要高并发：使用 `ConcurrentHashMap`
+   - 不需要高并发：可以使用 `HashTable` 或 `Collections.synchronizedMap()`
+3. **需要 null 值**：只能使用 `HashMap`
+4. **遗留系统维护**：可能需要继续使用 `HashTable`
+
+**15.1 hashmap的key允许有多个null值，那对应value取出来是什么**
+
+`HashMap` **只能有一个 `null` key**，后存入的会覆盖之前的。
+
+```java
+HashMap<String, Integer> map = new HashMap<>();
+map.put(null, 1);      // 存入 null key
+map.put(null, 2);      // 覆盖之前的 null key 的 value
+map.put("A", null);    // 存入 null value
+map.put("B", null);    // 再次存入 null value
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
