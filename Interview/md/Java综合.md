@@ -571,23 +571,198 @@ Thread类  public void interrupt()方法
 
 
 
+### 18、Java中有几种类型的流
+
+操作主体为 计算机，站在计算机的角度思考。
+
+**1.字节流(Byte Streams)**
+
+​		字节流以8位字节(byte)为单位进行数据读写，适合处理二进制数据。
+
+![](images/a_18_1.png)
+
+核心字节流类
+
+| 类                      | 描述                     |
+| ----------------------- | ------------------------ |
+| `InputStream`           | 所有字节输入流的抽象基类 |
+| `OutputStream`          | 所有字节输出流的抽象基类 |
+| `FileInputStream`       | 从文件读取字节           |
+| `FileOutputStream`      | 向文件写入字节           |
+| `ByteArrayInputStream`  | 从字节数组读取           |
+| `ByteArrayOutputStream` | 向字节数组写入           |
+| `BufferedInputStream`   | 带缓冲的输入流           |
+| `BufferedOutputStream`  | 带缓冲的输出流           |
+| `DataInputStream`       | 读取基本Java数据类型     |
+| `DataOutputStream`      | 写入基本Java数据类型     |
+| `ObjectInputStream`     | 对象反序列化             |
+| `ObjectOutputStream`    | 对象序列化               |
+
+字节流特点：
+
+- 处理单位：8位字节(byte)
+- 适合场景：图片、音频、视频等二进制文件
+- 不自动处理字符编码
+- 通常比字符流更底层
+
+**2.字符流(Character Streams)**
+
+​		字符流以16位Unicode字符(char)为单位进行数据读写，适合处理文本数据。
+
+![](./images/a_18_2.png)
+
+核心字符流类
+
+| 类                   | 描述                         |
+| -------------------- | ---------------------------- |
+| `Reader`             | 所有字符输入流的抽象基类     |
+| `Writer`             | 所有字符输出流的抽象基类     |
+| `FileReader`         | 从文件读取字符(使用默认编码) |
+| `FileWriter`         | 向文件写入字符(使用默认编码) |
+| `CharArrayReader`    | 从字符数组读取               |
+| `CharArrayWriter`    | 向字符数组写入               |
+| `BufferedReader`     | 带缓冲的字符输入流           |
+| `BufferedWriter`     | 带缓冲的字符输出流           |
+| `InputStreamReader`  | 字节流到字符流的桥梁         |
+| `OutputStreamWriter` | 字符流到字节流的桥梁         |
+| `PrintWriter`        | 格式化的字符输出流           |
+
+字符流特点：
+
+- 处理单位：16位Unicode字符(char)
+- 适合场景：文本文件处理
+- 自动处理字符编码转换(可指定编码)
+- 提供更方便的文本处理方法(如readLine())
 
 
 
+**字节流与字符流的区别**
+
+| 特性             | 字节流                           | 字符流                |
+| ---------------- | -------------------------------- | --------------------- |
+| **基本单位**     | 8位字节(byte)                    | 16位字符(char)        |
+| **处理数据类型** | 二进制数据                       | 文本数据              |
+| **编码处理**     | 不处理编码                       | 自动处理编码转换      |
+| **缓冲机制**     | 需要显式缓冲                     | 通常内置缓冲          |
+| **基类**         | InputStream/OutputStream         | Reader/Writer         |
+| **典型实现**     | FileInputStream/FileOutputStream | FileReader/FileWriter |
+| **性能**         | 较低层次，通常更快               | 更高层次，更方便      |
+| **适用场景**     | 图片、音频、视频等               | 文本文件、字符串处理  |
+
+**18.1 什么是I/O操作**
+
+I/O操作指的是：
+
+- **输入(Input)**：将数据从外部设备（如磁盘、键盘、网络等）传输到程序内存中
+- **输出(Output)**：将数据从程序内存传输到外部设备（如显示器、磁盘、打印机等）
+
+**18.2 I/O传输方式分类**
+
+| 类型          | 特点                         | 适用场景         | Java实现                    |
+| ------------- | ---------------------------- | ---------------- | --------------------------- |
+| **同步I/O**   | 操作阻塞当前线程直到完成     | 简单逻辑，单线程 | 基本I/O流                   |
+| **异步I/O**   | 操作立即返回，完成后回调     | 高并发，高性能   | NIO.2 (AsynchronousChannel) |
+| **阻塞I/O**   | 调用线程被阻塞直到“数据就绪” | 传统I/O模型      | InputStream/OutputStream    |
+| **非阻塞I/O** | 立即返回状态，需轮询检查     | 高并发网络编程   | NIO (Selector)              |
+
+**18.3 阻塞I/O中“数据就绪”**
+
+**数据就绪**指的是：
+
+- 对于**输入操作**：外部数据已经到达并可以被程序读取
+  - 例如：文件数据已从磁盘加载到内核缓冲区、网络数据包已到达网卡缓冲区
+- 对于**输出操作**：输出目标已准备好接收数据
+  - 例如：TCP窗口有可用空间、磁盘有足够存储空间
+
+**18.4  什么是Base64**
+
+​		Base64是一种将二进制数据编码为ASCII字符串的方法，常用于在文本协议（如JSON、XML）中传输图片等二进制数据。
+
+**18.5 base64是i/o操作吗**
+
+​		Base64本身不是I/O操作。Base64是一种**数据编码格式**，用于将二进制数据转换为ASCII字符。属于内存中的数据转换操作，不直接涉及输入/输出。
+
+**18.5 Base64图片在Web中的应用**
+
+​		HTML中直接显示Base64图片， 通过JSON传输。
+
+**18.6 Base64转换实例**
+
+编码图片为Base64字符串
+
+```java
+public class ImageToBase64 {
+    public static void main(String[] args) throws Exception {
+        // 读取图片文件为字节数组
+        byte[] imageBytes = Files.readAllBytes(Paths.get("photo.jpg"));
+        
+        // 使用Base64编码器
+        String base64String = Base64.getEncoder().encodeToString(imageBytes);
+        
+        System.out.println("Base64编码结果:");
+        System.out.println(base64String);
+    }
+}
+```
+
+解码Base64字符串为图片
+
+```java
+public class Base64ToImage {
+    public static void main(String[] args) throws Exception {
+        // Base64编码字符串
+        String base64String = "..." // 你的Base64字符串
+        
+        // 解码为字节数组
+        byte[] imageBytes = Base64.getDecoder().decode(base64String);
+        
+        // 写入文件
+        Files.write(Paths.get("restored.jpg"), imageBytes);
+        
+        System.out.println("图片已保存");
+    }
+}
+```
 
 
 
+### 19、请写出你最常见的5个RuntimeException
+
+1.java.lang.NullPointerException
+
+​		空指针异常；出现原因：调用了未经初始化的对象或者是不存在的对象。
+
+2.java.lang.ClassNotFoundException
+
+​		指定的类找不到；出现原因：类的名称和路径加载错误；通常都是程序试图通过字符串来加载某个类时可能引发异常。
+
+3.java.lang.NumberFormatException
+
+​		字符串转换为数字异常；出现原因：字符型数据中包含非数字型字符。
+
+4.java.lang.IndexOutOfBoundsException
+
+​		数组角标越界异常，常见于操作数组对象时发生。
+
+5.java.lang.IllegalArgumentException
+
+​		方法传递参数错误。
+
+> // 非法月份值
+> LocalDate.of(2023, 13, 1);  // 抛出DateTimeException（继承IllegalArgumentException）
+
+6.java.lang.ClassCastException
+
+​		数据类型转换异常。
+
+> //数据强转
+>
+> Object obj = "Hello";
+> Integer num = (Integer) obj;  // ClassCastException: String cannot be cast to Integer
 
 
 
-
-
-
-
-
-
-
-
+### 20、谈谈你对反射的理解
 
 
 
