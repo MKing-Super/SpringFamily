@@ -1,13 +1,13 @@
 package per.mk.pirate.frame;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 public class Ignition {
 
     public static void start(){
         try {
+
+            BeanRegister.start();
+
+
             // http端口监听
             System.out.println("http端口监听 启动");
             HttpServer httpServer = new HttpServer();
@@ -20,9 +20,9 @@ public class Ignition {
             eventLoop.start();
             System.out.println("事件处理循环 启动成功");
 
-            Thread.sleep(5000);
             httpServer.eventLoop = eventLoop;
 
+            // 启动测试
             Event event = new Event() {
                 @Override
                 public void handle() {

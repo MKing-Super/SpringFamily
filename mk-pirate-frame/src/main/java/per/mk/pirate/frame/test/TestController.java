@@ -1,0 +1,13 @@
+package per.mk.pirate.frame.test;
+
+public class TestController {
+    private String name = "mkmk";
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
