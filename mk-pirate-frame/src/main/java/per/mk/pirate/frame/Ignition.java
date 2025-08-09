@@ -1,12 +1,13 @@
 package per.mk.pirate.frame;
 
+import java.util.Map;
+
 public class Ignition {
 
     public static void start(){
         try {
-
-            BeanRegister.start();
-
+            // bean实例化存储
+            Map<String, Object> beanMap = BeanRegister.start();
 
             // http端口监听
             System.out.println("http端口监听 启动");
@@ -22,14 +23,10 @@ public class Ignition {
 
             httpServer.eventLoop = eventLoop;
 
-            // 启动测试
-            Event event = new Event() {
-                @Override
-                public void handle() {
-                    System.out.println("11");
-                }
-            };
-            eventLoop.postEvent(event);
+            // 整体
+            Whole.setBeanMap(beanMap);
+            Whole.setHttpServer(httpServer);
+            Whole.setEventLoop(eventLoop);
         }catch (Exception e){
             e.printStackTrace();
         }

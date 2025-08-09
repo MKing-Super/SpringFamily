@@ -11,7 +11,7 @@ public class BeanRegister {
 
     public static Map<String,Object> beanRegisterMap;
 
-    public static void start(){
+    public static Map<String,Object> start(){
         try {
             beanRegisterMap = new ConcurrentHashMap<>();
             Class<?> aClass = TestController.class;
@@ -21,6 +21,8 @@ public class BeanRegister {
             System.out.println(beanRegisterMap);
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            return beanRegisterMap;
         }
 
     }
