@@ -89,7 +89,7 @@ public class HttpServer {
             System.out.println("Body: " + body);
 
             System.out.println("http 请求处理");
-            Object o = httpHandlerMethod();
+            Object o = httpHandlerMethod(request);
             System.out.println("http 请求处理 完成");
 
             // 4. 返回响应
@@ -101,10 +101,20 @@ public class HttpServer {
         }
     }
 
-    private static Object httpHandlerMethod(){
-        String name = TestController.class.getName();
-        TestController o = (TestController)BeanRegister.beanRegisterMap.get(name);
-        return o.getName();
+    private static Object httpHandlerMethod(Map request){
+        String url = request.get("url").toString();
+        String[] split = url.split("\\?", 2);
+        String urlPre = split[0];
+        String params = split.length == 2 ? split[1] : null;
+        if ("/mk".equals(urlPre)){
+            String name = TestController.class.getName();
+            TestController o = (TestController)BeanRegister.beanRegisterMap.get(name);
+            o.setName(params);
+            return o.getName();
+        }else {
+            return "-------------- 404 -------------";
+        }
+
     }
 
 }

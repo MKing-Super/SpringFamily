@@ -1,7 +1,7 @@
 package per.mk.pirate.frame.test;
 
 public class TestController {
-    private String name = "mkmk";
+    private String name;
 
     public String getName() {
         return name;
