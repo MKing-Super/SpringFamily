@@ -58,7 +58,7 @@ public class BeanRegister {
     }
 
 
-    public static void scanPackage(String basePackage) throws Exception {
+    private static void scanPackage(String basePackage) throws Exception {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         String path = basePackage.replace('.', '/');
         Enumeration<URL> resources = classLoader.getResources(path);

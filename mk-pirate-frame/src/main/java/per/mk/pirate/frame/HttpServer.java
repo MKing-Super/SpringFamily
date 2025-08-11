@@ -15,6 +15,8 @@ import java.util.Map;
 监听 9000 接口，对访问的url做出反应
  */
 public class HttpServer {
+    // 指定端口
+    public static int HTTP_PORT = 9000;
 
     public Thread start(){
         Thread thread = new Thread(this::portListener);
@@ -24,7 +26,7 @@ public class HttpServer {
     }
 
     private void portListener(){
-        int port = 9000;
+        int port = HTTP_PORT;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Listening on port " + port);
             while (true) {
