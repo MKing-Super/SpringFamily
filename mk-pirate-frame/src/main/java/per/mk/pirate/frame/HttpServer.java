@@ -14,8 +14,6 @@ import java.util.Map;
  */
 public class HttpServer {
 
-    public EventLoop eventLoop;
-
     public Thread start(){
         Thread thread = new Thread(this::portListener);
         thread.setDaemon(false); // 明确设置为非守护线程
@@ -43,8 +41,7 @@ public class HttpServer {
                         }
                     }
                 };
-                eventLoop.postEvent(event);
-
+                Whole.getEventLoop().postEvent(event);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -88,9 +85,9 @@ public class HttpServer {
             }
             System.out.println("Body: " + body);
 
-            System.out.println("http 请求处理");
+            System.out.println("http handle start~");
             Object o = httpHandlerMethod(request);
-            System.out.println("http 请求处理 完成");
+            System.out.println("http handle completed.result -> " + o);
 
             // 4. 返回响应
             writer.println("HTTP/1.1 200 OK");
@@ -110,7 +107,7 @@ public class HttpServer {
             String name = TestController.class.getName();
             TestController o = (TestController)BeanRegister.beanRegisterMap.get(name);
             o.setName(params);
-            return o.getName();
+            return o.getName() + o.getCode();
         }else {
             return "-------------- 404 -------------";
         }

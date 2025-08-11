@@ -21,8 +21,6 @@ public class Ignition {
             eventLoop.start();
             System.out.println("事件处理循环 启动成功");
 
-            httpServer.eventLoop = eventLoop;
-
             // 整体
             Whole.setBeanMap(beanMap);
             Whole.setHttpServer(httpServer);
