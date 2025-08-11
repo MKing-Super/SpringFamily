@@ -1,12 +1,16 @@
 package per.mk.pirate.frame;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 public class BeanRegister {
 
@@ -62,8 +66,19 @@ public class BeanRegister {
         List<Class<?>> classes = new ArrayList<>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
-            File file = new File(resource.toURI());
-            classes.addAll(findClasses(file, basePackage)); // 递归查找子包
+            // 兼容 开发环境 与 部署环境
+            String protocol = resource.getProtocol(); // 获取协议类型
+            if ("file".equals(protocol)) {
+                // 文件系统路径（开发环境）
+                File file = new File(resource.toURI());
+                classes.addAll(findClasses(file, basePackage));// 递归查找子包
+            } else if ("jar".equals(protocol)) {
+                // JAR 包内路径（部署环境）
+                classes.addAll(processJarResource(resource, basePackage));
+            }
+
+//            File file = new File(resource.toURI());
+//            classes.addAll(findClasses(file, basePackage)); // 递归查找子包
         }
 
         // 检测类和方法上的@PiratePart
@@ -109,6 +124,36 @@ public class BeanRegister {
 //                }
 //            }
 //        }
+    }
+
+    private static List<Class<?>> processJarResource(URL jarUrl, String basePackage) throws IOException {
+        System.out.println(jarUrl);
+        List<Class<?>> classes = new ArrayList<>();
+        String jarPath = jarUrl.getPath().split("!")[0].replace("jar:", "").replace("file:/", "");; // 提取 JAR 文件路径
+        String packagePath = basePackage.replace('.', '/'); // 包路径（如 per/mk/pirate/frame/test）
+        System.out.println(jarPath);
+
+        try (JarFile jarFile = new JarFile(jarPath)) {
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                JarEntry entry = entries.nextElement();
+                String entryName = entry.getName();
+
+                // 过滤：匹配目标包路径且是 .class 文件
+                if (entryName.startsWith(packagePath) && entryName.endsWith(".class")) {
+                    String className = entryName
+                            .replace("/", ".") // 路径转包名
+                            .replace(".class", ""); // 去除后缀
+                    try {
+                        Class<?> clazz = Class.forName(className);
+                        classes.add(clazz);
+                    } catch (ClassNotFoundException e) {
+                        // 忽略加载失败的类
+                    }
+                }
+            }
+        }
+        return classes;
     }
 
 
