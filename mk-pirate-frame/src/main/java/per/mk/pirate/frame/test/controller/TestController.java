@@ -10,7 +10,16 @@ public class TestController {
 
     @PirateUrl(value = {"/test"})
     public String testMethod(String name){
-        return new Date().toString() + " test -> " + name;
+//        int a = 1/0;
+        return "test(String) -> " + name;
+    }
+
+    public String testMethod(String name,Integer code){
+        return "test(String,Integer) -> " + name + " | " + code;
+    }
+
+    public String testMethod(Integer code){
+        return "test(Integer) -> " + code;
     }
 
     @PirateUrl(value = {"/mk"})
