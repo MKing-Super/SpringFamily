@@ -7,7 +7,7 @@ public class Ignition {
     public static void start(){
         try {
             // bean实例化存储
-            Map<String, Object> beanMap = BeanRegister.start();
+            Map<String, BeanInfo> beanMap = BeanRegister.start();
 
             // http端口监听
             System.out.println("http端口监听 启动");

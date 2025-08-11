@@ -5,18 +5,19 @@ import java.util.Map;
 public class Whole {
 
     // bean实例化存储
-    private static Map<String, Object> beanMap;
+    private static Map<String, BeanInfo> beanMap;
     // http端口监听
     private static HttpServer httpServer;
     // 事件处理循环
     private static EventLoop eventLoop;
 
 
-    public static Map<String, Object> getBeanMap() {
+
+    public static Map<String, BeanInfo> getBeanMap() {
         return beanMap;
     }
 
-    public static void setBeanMap(Map<String, Object> beanMap) {
+    public static void setBeanMap(Map<String, BeanInfo> beanMap) {
         Whole.beanMap = beanMap;
     }
 

@@ -1,8 +1,10 @@
 package per.mk.pirate.frame;
 
-import per.mk.pirate.frame.test.TestController;
+import per.mk.pirate.frame.test.controller.TestController;
 
 import java.io.*;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
@@ -85,9 +87,9 @@ public class HttpServer {
             }
             System.out.println("Body: " + body);
 
-            System.out.println("http handle start~");
+            System.out.println(">>>>>>>>>> http handle start~");
             Object o = httpHandlerMethod(request);
-            System.out.println("http handle completed.result -> " + o);
+            System.out.println("<<<<<<<<<< http handle completed.result -> " + o);
 
             // 4. 返回响应
             writer.println("HTTP/1.1 200 OK");
@@ -103,13 +105,28 @@ public class HttpServer {
         String[] split = url.split("\\?", 2);
         String urlPre = split[0];
         String params = split.length == 2 ? split[1] : null;
-        if ("/mk".equals(urlPre)){
-            String name = TestController.class.getName();
-            TestController o = (TestController)BeanRegister.beanRegisterMap.get(name);
-            o.setName(params);
-            return o.getName() + o.getCode();
+
+        BeanInfo beanInfo = BeanRegister.beanRegisterMap.get(urlPre);
+        if (beanInfo == null){
+            return "-------------- other -------------";
         }else {
-            return "-------------- 404 -------------";
+            Object object = beanInfo.getObject();
+            Method method = beanInfo.getMethod();
+            Parameter[] parameters = method.getParameters();
+//            Class<?>[] types = new Class[parameters.length];
+//            for (int j = 0 ; j < parameters.length ; j++) {
+//                types[j] = parameters[j].getType();
+//                System.out.println("参数类型: " + parameters[j].getType().getName());
+//                System.out.println("参数名称: " + parameters[j].getName());
+//            }
+            Object[] args = {params};
+            try {
+                Object invoke = method.invoke(object, args);
+                return invoke;
+            }catch (Exception e){
+                e.printStackTrace();
+                return "系统异常！！！";
+            }
         }
 
     }
