@@ -1,4 +1,4 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.event;
 
 public interface Event {
 

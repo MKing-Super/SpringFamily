@@ -1,7 +1,21 @@
 package per.mk.pirate.frame;
 
+import per.mk.pirate.frame.bean.BeanInfo;
+import per.mk.pirate.frame.bean.BeanRegister;
+import per.mk.pirate.frame.event.EventLoop;
+import per.mk.pirate.frame.socket.HttpServer;
+import per.mk.pirate.frame.whole.Whole;
+
 import java.util.Map;
 
+/**
+ 框架启动类
+
+ 修改 BeanRegister.PACKAGE_PATH 指定扫包路径
+ 修改 HttpServer.HTTP_PORT 指定httpServer监视接口
+
+ 项目启动 Ignition.start()
+ **/
 public class Ignition {
 
     public static void start(){

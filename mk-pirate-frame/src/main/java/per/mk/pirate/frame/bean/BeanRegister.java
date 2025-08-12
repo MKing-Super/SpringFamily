@@ -1,4 +1,7 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.bean;
+
+import per.mk.pirate.frame.annotation.PiratePart;
+import per.mk.pirate.frame.annotation.PirateUrl;
 
 import java.io.File;
 import java.io.IOException;
@@ -160,40 +163,3 @@ public class BeanRegister {
 
 }
 
-class BeanInfo {
-    String url;
-    Object object;
-    Method method;
-
-    public BeanInfo(String url, Object object, Method method) {
-        this.url = url;
-        this.object = object;
-        this.method = method;
-    }
-
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public Object getObject() {
-        return object;
-    }
-
-    public void setObject(Object object) {
-        this.object = object;
-    }
-
-    public Method getMethod() {
-        return method;
-    }
-
-    public void setMethod(Method method) {
-        this.method = method;
-    }
-
-}

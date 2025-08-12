@@ -1,6 +1,9 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.socket;
 
-import per.mk.pirate.frame.test.controller.TestController;
+import per.mk.pirate.frame.whole.Whole;
+import per.mk.pirate.frame.bean.BeanInfo;
+import per.mk.pirate.frame.bean.BeanRegister;
+import per.mk.pirate.frame.event.Event;
 
 import java.io.*;
 import java.lang.reflect.Method;

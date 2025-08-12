@@ -1,4 +1,4 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.annotation;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

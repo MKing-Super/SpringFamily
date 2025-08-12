@@ -1,6 +1,7 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.event;
 
-import java.net.ServerSocket;
+import per.mk.pirate.frame.event.Event;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;

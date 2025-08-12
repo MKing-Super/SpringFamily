@@ -1,4 +1,4 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;

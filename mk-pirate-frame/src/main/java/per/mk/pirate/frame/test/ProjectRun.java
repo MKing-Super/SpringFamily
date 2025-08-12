@@ -1,4 +1,8 @@
-package per.mk.pirate.frame;
+package per.mk.pirate.frame.test;
+
+import per.mk.pirate.frame.Ignition;
+import per.mk.pirate.frame.bean.BeanRegister;
+import per.mk.pirate.frame.socket.HttpServer;
 
 /**
  修改 BeanRegister.PACKAGE_PATH 指定扫包路径
