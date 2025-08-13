@@ -7,6 +7,7 @@ import per.mk.pirate.frame.socket.HttpServer;
 import per.mk.pirate.frame.whole.Whole;
 
 import java.util.Map;
+import java.util.Properties;
 
 /**
  框架启动类
@@ -20,6 +21,12 @@ public class Ignition {
 
     public static void start(){
         try {
+            // 1.项目启动耗时
+            long startTime = System.nanoTime();
+            // 2.设置无头模式
+            System.setProperty("java.awt.headless", "true");
+
+
             // bean实例化存储
             Map<String, BeanInfo> beanMap = BeanRegister.start();
 
@@ -39,6 +46,8 @@ public class Ignition {
             Whole.setBeanMap(beanMap);
             Whole.setHttpServer(httpServer);
             Whole.setEventLoop(eventLoop);
+            long endTime = System.nanoTime();
+            System.out.println("主线程执行耗时: " + (endTime - startTime) / 1_000_000 + " ms");
         }catch (Exception e){
             e.printStackTrace();
         }
