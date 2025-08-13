@@ -26,12 +26,14 @@ public class EventSystemDemo {
         publisher.publishEvent(new UserLoginEvent(authService, "john_doe", "192.168.1.100"));
 
         Thread.sleep(1000);
+        System.out.println("------------------------------------------------");
 
         // 模拟订单创建
         Object orderService = new Object(); // 模拟订单服务
         publisher.publishEvent(new OrderCreatedEvent(orderService, "ORD12345", 99.99));
 
         Thread.sleep(1000);
+        System.out.println("------------------------------------------------");
 
         // 模拟系统关闭
         publisher.publishEvent(new BaseEvent(EventType.SYSTEM_SHUTDOWN, EventSystemDemo.class) {

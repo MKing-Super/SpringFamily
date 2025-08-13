@@ -6,6 +6,7 @@ import per.mk.pirate.test.listener.event.BaseEvent;
 public class LoggingListener implements EventListener {
     @Override
     public void onEvent(BaseEvent event) {
+        System.out.println("LoggingListener >>>");
         System.out.println("[LOG] " + event.getTimestamp() + " - " + event.getType() + ": " + event);
     }
 

@@ -8,6 +8,7 @@ import per.mk.pirate.test.listener.event.UserLoginEvent;
 public class UserBehaviorListener implements EventListener {
     @Override
     public void onEvent(BaseEvent event) {
+        System.out.println("UserBehaviorListener >>>");
         if (event instanceof UserLoginEvent) {
             UserLoginEvent loginEvent = (UserLoginEvent) event;
             System.out.println("[ANALYTICS] User " + loginEvent.getUsername() +

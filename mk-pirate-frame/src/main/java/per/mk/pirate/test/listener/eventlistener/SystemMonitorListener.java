@@ -6,6 +6,7 @@ import per.mk.pirate.test.listener.event.BaseEvent;
 public class SystemMonitorListener implements EventListener {
     @Override
     public void onEvent(BaseEvent event) {
+        System.out.println("SystemMonitorListener >>>");
         if (event.getType() == EventType.SYSTEM_SHUTDOWN) {
             System.out.println("[MONITOR] System shutdown detected. Performing cleanup...");
             // 执行清理操作
