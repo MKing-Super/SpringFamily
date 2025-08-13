@@ -1,8 +1,8 @@
-package per.mk.pirate.frame.test.service.impl;
+package per.mk.pirate.test.service.impl;
 
 
 import per.mk.pirate.frame.annotation.PiratePart;
-import per.mk.pirate.frame.test.service.TestService;
+import per.mk.pirate.test.service.TestService;
 
 @PiratePart
 public class TestServiceImpl implements TestService {

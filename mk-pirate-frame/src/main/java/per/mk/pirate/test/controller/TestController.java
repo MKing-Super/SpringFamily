@@ -1,4 +1,4 @@
-package per.mk.pirate.frame.test.controller;
+package per.mk.pirate.test.controller;
 
 import per.mk.pirate.frame.annotation.PiratePart;
 import per.mk.pirate.frame.annotation.PirateUrl;

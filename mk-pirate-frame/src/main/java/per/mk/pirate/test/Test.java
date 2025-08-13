@@ -1,4 +1,4 @@
-package per.mk.pirate.frame.test;
+package per.mk.pirate.test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationHandler;
@@ -18,7 +18,7 @@ public class Test {
 //            Object[] vars = {"mk",666};
             Object[] vars = {"mkmk"};
 
-            Class<?> aClass = Class.forName("per.mk.pirate.frame.test.controller.TestController");
+            Class<?> aClass = Class.forName("per.mk.pirate.test.controller.TestController");
             // 类 内容取值
             Constructor<?> constructor = aClass.getConstructor();
             Method[] methods = aClass.getMethods();
