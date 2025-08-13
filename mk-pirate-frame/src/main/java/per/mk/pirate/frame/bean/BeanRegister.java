@@ -19,7 +19,7 @@ import java.util.jar.JarFile;
 public class BeanRegister {
 
     // 指定扫描的包
-    public static String PACKAGE_PATH = "per.mk.pirate.test";
+    public static String PACKAGE_PATH = "per.mk.pirate.test.frame";
     // 存储实例bean
     public static Map<String,BeanInfo> beanRegisterMap = new ConcurrentHashMap<>();
     // @PiratePart 类 名称

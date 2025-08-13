@@ -1,4 +1,4 @@
-package per.mk.pirate.test.service;
+package per.mk.pirate.test.frame.service;
 
 //@PiratePart
 public interface TestService {

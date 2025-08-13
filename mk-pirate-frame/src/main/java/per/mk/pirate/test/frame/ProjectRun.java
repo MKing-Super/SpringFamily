@@ -1,4 +1,4 @@
-package per.mk.pirate.test;
+package per.mk.pirate.test.frame;
 
 import per.mk.pirate.frame.Ignition;
 import per.mk.pirate.frame.bean.BeanRegister;
@@ -14,7 +14,7 @@ public class ProjectRun {
 
     // 启动框架
     public static void main(String[] args) {
-        BeanRegister.PACKAGE_PATH = "per.mk.pirate.test";
+        BeanRegister.PACKAGE_PATH = "per.mk.pirate.test.frame";
         HttpServer.HTTP_PORT = 9000;
         Ignition.start();
         System.out.println(">>>>>>>>>>>>>>>>>>>>>");
