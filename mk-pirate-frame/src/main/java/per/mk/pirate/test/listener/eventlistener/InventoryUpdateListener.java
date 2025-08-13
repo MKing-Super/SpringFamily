@@ -1,4 +1,8 @@
-package per.mk.pirate.test.listener;
+package per.mk.pirate.test.listener.eventlistener;
+
+import per.mk.pirate.test.listener.enums.EventType;
+import per.mk.pirate.test.listener.event.BaseEvent;
+import per.mk.pirate.test.listener.event.OrderCreatedEvent;
 
 public class InventoryUpdateListener implements EventListener {
     @Override

@@ -1,4 +1,6 @@
-package per.mk.pirate.test.listener;
+package per.mk.pirate.test.listener.event;
+
+import per.mk.pirate.test.listener.enums.EventType;
 
 // 订单创建事件
 public class OrderCreatedEvent extends BaseEvent {

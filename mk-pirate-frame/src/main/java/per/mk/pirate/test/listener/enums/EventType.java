@@ -1,4 +1,4 @@
-package per.mk.pirate.test.listener;
+package per.mk.pirate.test.listener.enums;
 
 public enum EventType {
     USER_LOGIN,          // 用户登录事件

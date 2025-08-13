@@ -1,4 +1,7 @@
-package per.mk.pirate.test.listener;
+package per.mk.pirate.test.listener.eventpublisher;
+
+import per.mk.pirate.test.listener.event.BaseEvent;
+import per.mk.pirate.test.listener.eventlistener.EventListener;
 
 import java.util.ArrayList;
 import java.util.List;

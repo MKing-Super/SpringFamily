@@ -1,4 +1,7 @@
-package per.mk.pirate.test.listener;
+package per.mk.pirate.test.listener.eventlistener;
+
+import per.mk.pirate.test.listener.enums.EventType;
+import per.mk.pirate.test.listener.event.BaseEvent;
 
 public class SystemMonitorListener implements EventListener {
     @Override
