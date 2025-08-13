@@ -1,5 +1,6 @@
 package per.mk.pirate.test.listener;
 
+// 用户登录事件
 public class UserLoginEvent extends BaseEvent {
     private final String username;
     private final String ipAddress;
