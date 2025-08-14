@@ -48,6 +48,12 @@ public class Ignition {
             Whole.setEventLoop(eventLoop);
             long endTime = System.nanoTime();
             System.out.println("主线程执行耗时: " + (endTime - startTime) / 1_000_000 + " ms");
+
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                httpServer.stop();
+                eventLoop.stop();
+                System.out.println("钩子：在 JVM 正常关闭时执行清理操作的机制。");
+            }));
         }catch (Exception e){
             e.printStackTrace();
         }

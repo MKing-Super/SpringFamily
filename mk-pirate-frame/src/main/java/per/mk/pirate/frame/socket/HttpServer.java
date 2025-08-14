@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /*
 监听 9000 接口，对访问的url做出反应
@@ -21,18 +22,24 @@ public class HttpServer {
     // 指定端口
     public static int HTTP_PORT = 9000;
 
-    public Thread start(){
-        Thread thread = new Thread(this::portListener);
-        thread.setDaemon(false); // 明确设置为非守护线程
-        thread.start();
-        return thread;
+    // 事件循环线程（非守护线程）
+    private Thread thread;
+    // 循环运行状态标记
+    private final AtomicBoolean isRunning = new AtomicBoolean(false);
+
+    public void start(){
+        if (isRunning.compareAndSet(false, true)) {
+            thread = new Thread(this::portListener);
+            thread.setDaemon(false); // 明确设置为非守护线程
+            thread.start();
+        }
     }
 
     private void portListener(){
         int port = HTTP_PORT;
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             System.out.println("Listening on port " + port);
-            while (true) {
+            while (isRunning.get()) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println(new Date());
                 InputStream in = clientSocket.getInputStream();
@@ -134,6 +141,15 @@ public class HttpServer {
             }
         }
 
+    }
+
+    public void stop() {
+        if (isRunning.compareAndSet(true, false)) {
+            // 中断事件循环线程
+            if (thread != null) {
+                thread.interrupt();
+            }
+        }
     }
 
 }
