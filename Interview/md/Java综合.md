@@ -1375,6 +1375,339 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 
 
 
+## 三、Java框架
+
+### 1、简单的谈一下SpringMVC的工作流程
+
+**1. 请求到达 DispatcherServlet**
+
+```xml
+// web.xml 配置示例
+<servlet>
+    <servlet-name>dispatcher</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+</servlet>
+
+<servlet-mapping>
+    <servlet-name>dispatcher</servlet-name>
+    <url-pattern>/</url-pattern>
+</servlet-mapping>
+```
+
+- •所有匹配 URL 模式的请求都由 `DispatcherServlet` 处理
+- •`DispatcherServlet` 读取 Spring MVC 配置文件初始化应用上下文
+
+**2. HandlerMapping 寻找处理器**
+
+```java
+
+// Controller 示例
+@Controller
+@RequestMapping("/users")
+public class UserController {
+    
+    @GetMapping("/{id}")
+    public String getUser(@PathVariable Long id, Model model) {
+        User user = userService.findById(id);
+        model.addAttribute("user", user);
+        return "user/profile";
+    }
+}
+```
+
+- •`HandlerMapping` 根据请求 URL 找到对应的 Controller 和方法
+- •常用的 `HandlerMapping` 实现： •`RequestMappingHandlerMapping`（用于注解驱动的控制器） •`BeanNameUrlHandlerMapping`（基于 Bean 名称的映射） •`SimpleUrlHandlerMapping`（基于 URL 模式的映射）
+
+**3. HandlerAdapter 执行处理器**
+
+```java
+
+// 自定义 HandlerAdapter 示例（了解原理）
+public class CustomHandlerAdapter implements HandlerAdapter {
+    
+    @Override
+    public boolean supports(Object handler) {
+        return handler instanceof UserController;
+    }
+    
+    @Override
+    public ModelAndView handle(HttpServletRequest request, 
+                              HttpServletResponse response, 
+                              Object handler) throws Exception {
+        // 调用控制器方法并返回 ModelAndView
+        UserController controller = (UserController) handler;
+        return controller.handleRequest(request, response);
+    }
+    
+    @Override
+    public long getLastModified(HttpServletRequest request, Object handler) {
+        return -1;
+    }
+}
+```
+
+- •`HandlerAdapter` 负责实际调用控制器方法
+- •Spring MVC 提供了多种适配器以支持不同类型的控制器
+
+**4. 控制器处理请求**
+
+```java
+
+@Controller
+public class UserController {
+    
+    @PostMapping("/create")
+    public String createUser(@Valid UserForm form, 
+                           BindingResult result, 
+                           RedirectAttributes attributes) {
+        
+        if (result.hasErrors()) {
+            return "user/create-form";
+        }
+        
+        User user = userService.createUser(form);
+        attributes.addFlashAttribute("message", "用户创建成功");
+        return "redirect:/users/" + user.getId();
+    }
+}
+```
+
+- •控制器方法接收请求参数，执行业务逻辑
+- •可以返回多种类型： •`ModelAndView`：包含模型数据和视图信息 •`String`：视图名称 •`void`：自行处理响应 •`@ResponseBody`：直接返回数据（RESTful API）
+
+**5. 处理返回值**
+
+```java
+
+@Controller
+public class ProductController {
+    
+    @GetMapping("/api/products/{id}")
+    @ResponseBody
+    public Product getProduct(@PathVariable Long id) {
+        return productService.findById(id);
+    }
+    
+    @GetMapping("/products/list")
+    public ModelAndView listProducts() {
+        List<Product> products = productService.findAll();
+        ModelAndView mav = new ModelAndView("product/list");
+        mav.addObject("products", products);
+        return mav;
+    }
+}
+```
+
+- •对于视图返回，Spring 会创建 `ModelAndView` 对象
+- •对于 `@ResponseBody`，使用 `HttpMessageConverter` 转换返回值为 HTTP 响应体
+
+**6. ViewResolver 解析视图**
+
+```java
+
+// Spring 配置示例
+@Configuration
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+    
+    @Bean
+    public ViewResolver viewResolver() {
+        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
+        resolver.setPrefix("/WEB-INF/views/");
+        resolver.setSuffix(".jsp");
+        return resolver;
+    }
+    
+    @Bean
+    public BeanNameViewResolver beanNameViewResolver() {
+        return new BeanNameViewResolver();
+    }
+}
+```
+
+- •`ViewResolver` 根据视图名称解析为具体的 `View` 对象
+- •常用实现： •`InternalResourceViewResolver`：用于 JSP •`ThymeleafViewResolver`：用于 Thymeleaf •`FreeMarkerViewResolver`：用于 FreeMarker •`ContentNegotiatingViewResolver`：根据内容类型选择视图
+
+**7. 视图渲染**
+
+```java
+
+<!-- /WEB-INF/views/user/profile.jsp -->
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>用户信息</title>
+</head>
+<body>
+    <h1>用户详情</h1>
+    <p>用户名: ${user.username}</p>
+    <p>邮箱: ${user.email}</p>
+    <a href="/users/${user.id}/edit">编辑</a>
+</body>
+</html>
+```
+
+- •`View` 对象使用模型数据渲染最终响应
+- •渲染结果写入 `HttpServletResponse`
+
+**8. 返回响应给客户端**
+
+- •完成所有处理后，响应通过 Servlet 容器返回给客户端
+- •包括状态码、头部信息和响应体
+
+
+
+Spring MVC 的工作流程可以概括为：
+
+1. 1.**请求分发**：`DispatcherServlet` 接收所有请求
+2. 2.**处理器映射**：`HandlerMapping` 找到对应的控制器方法
+3. 3.**处理器适配**：`HandlerAdapter` 执行控制器方法
+4. 4.**结果处理**：处理返回值，可能涉及模型填充和视图选择
+5. 5.**视图解析**：`ViewResolver` 解析视图名称到具体视图
+6. 6.**渲染响应**：视图使用模型数据渲染最终响应
+
+### 2、说出Spring或者SpringMVC中常用的5个注解
+
+**1.组件扫描**
+
+```java
+@Component // 通用组件注解
+@Service   // 标记服务层组件
+@Repository // 标记数据访问层组件（DAO）
+@Controller // 标记控制器组件（Web层）
+```
+
+**2. 依赖注入注解**
+
+```java
+@Autowired // 自动装配（按类型）
+@Qualifier("beanName") // 指定具体Bean名称
+@Resource(name="beanName") // JSR-250规范，按名称注入
+@Value("${property.name}") // 注入属性值
+```
+
+**3.控制器相关**
+
+```java
+@RestController // @Controller + @ResponseBody
+@RequestMapping("/users") // 类级别URL映射
+@GetMapping("/{id}")      // 方法级别GET映射
+@PostMapping             // 方法级别POST映射
+```
+
+### 3、简述SpringMVC中如何返回JSON数据 
+
+Step1：在项目中加入json转换的依赖，例如jackson，fastjson，gson等
+
+Step2：在请求处理方法中将返回值改为具体返回的数据的类型， 例如数据的集合类List<Employee>等
+
+Step3：在请求处理方法上使用@ResponseBody注解
+
+### 4、谈谈你对Spring的理解
+
+​		Spring 是一个开源框架，为简化企业级应用开发而生。Spring 是一个 IOC 和 AOP 容器框架。
+
+Spring 容器的主要核心是：
+
+​		控制反转（IOC），传统的 java 开发模式中，当需要一个对象时，我们会自己使用 new 或者 getInstance 等直接或者间接调用构造方法创建一个对象。而在 spring 开发模式中，spring 容器使用了工厂模式为我们创建了所需要的对象，不需要我们自己创建了，直接调用spring 提供的对象就可以了，这是控制反转的思想。
+
+​		依赖注入（DI），spring 使用 javaBean 对象的 set 方法或者带参数的构造方法为我们在创建所需对象时将其属性自动设置所需要的值的过程，就是依赖注入的思想。
+
+​		面向切面编程（AOP），在面向对象编程（oop）思想中，我们将事物纵向抽成一个个的对象。而在面向切面编程中，我们将一个个的对象某些类似的方面横向抽成一个切面，对这个切面进行一些如权限控制、事物管理，记录日志等公用操作处理的过程就是面向切面编程的思想。AOP 底层是动态代理，如果是接口采用 JDK 动态代理，如果是类采用CGLIB 方式实现动态代理。
+
+
+### 5、Spring中常用的设计模式
+
+**1. 依赖注入（Dependency Injection）模式**
+
+**定义**
+
+​		一种对象之间解耦的设计模式，依赖项由外部容器（如 Spring）提供，而不是由对象自己创建。
+
+**核心特点**
+
+- •控制反转（IoC）：对象不负责依赖项的创建，由容器管理
+- •解耦：组件间不直接依赖，通过接口协作
+- •可测试：易于模拟依赖进行单元测试
+
+
+
+**2. 工厂模式（Factory Pattern）**
+
+**场景**：Bean 创建、复杂对象实例化
+
+**定义**
+
+​		提供创建对象的接口，让子类决定实例化哪个类，将创建逻辑与使用逻辑分离。
+
+**类型**
+
+1. 1.**简单工厂**：一个工厂类创建多种产品
+2. 2.**工厂方法**：定义创建对象的接口，由子类实现
+3. 3.**抽象工厂**：创建相关对象族
+
+
+
+**3. 单例模式（Singleton Pattern）**
+
+**场景**：Bean 默认作用域，资源共享
+
+**定义**
+
+​		确保一个类只有一个实例，并提供全局访问点。
+
+**Spring 实现特点**
+
+- •Bean 默认作用域就是单例
+- •通过容器管理单例生命周期
+- •支持延迟初始化（@Lazy）
+
+
+
+**4. 代理模式（Proxy Pattern）**
+
+**场景**：AOP 编程、事务管理
+
+**定义**
+
+​		为其他对象提供一种代理，以控制对这个对象的访问。
+
+**Spring 实现方式**
+
+1. 1.**JDK 动态代理**：基于接口代理（实现相同接口）
+2. 2.**CGLIB 代理**：基于继承代理（生成子类）
+
+
+
+**5.模板方法模式（Template Method）**
+
+**定义**
+
+​		定义一个操作中的算法骨架，将某些步骤延迟到子类中实现。
+
+**核心特点**
+
+- •抽象类定义流程
+- •具体子类实现特定步骤
+- •模板方法确保流程顺序
+
+
+
+### 6、Spring循环依赖问题
+
+
+
+
+
+
+
+
+
 
 
 
