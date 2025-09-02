@@ -2149,3 +2149,362 @@ User user1 = sqlSession.selectOne("getUserById", 1);  // 查数据库
 | **性能影响** | 轻量级，无序列化开销  | 需序列化/反序列化（除非 readOnly=true） |
 
 缓存的查找顺序：二级缓存 => 一级缓存 => 数据库
+
+
+
+### 11、MyBatis如何获取自动生成的(主)键值
+
+在<insert>标签中使用 useGeneratedKeys和keyProperty 两个属性来获取自动生成的主键值。
+
+示例:
+
+```xml
+<insert id="insertname" useGeneratedkeys="true" keyProperty="id">
+    insert into names (name) values (#{name}) 
+</insert>
+```
+
+> generated	/ˈdʒenəreɪtɪd/
+>
+> property	/ˈprɑːpərti/
+
+
+
+### 12、简述Mybatis的动态SQL，列出常用的6个标签及作用
+
+**动态 SQL 概述**
+
+​		MyBatis 的动态 SQL 功能允许开发者根据条件**动态构建 SQL 语句**，无需在 Java 代码中拼接 SQL 字符串。这种特性使得 SQL 语句更加灵活、可维护，同时避免了 SQL 注入风险。
+
+**动态 SQL 标签及作用**
+
+**1. `<if>` - 条件判断**
+
+**作用**：根据表达式结果决定是否包含 SQL 片段
+
+**2. `<choose>/<when>/<otherwise>` - 多条件选择**
+
+**作用**：实现类似 Java 的 switch-case 逻辑
+
+```xml
+<select id="findActiveUsers">
+  SELECT * FROM users
+  WHERE state = 'ACTIVE'
+  <choose>
+    <when test="role == 'admin'">
+      AND access_level > 90
+    </when>
+    <when test="role == 'user'">
+      AND access_level BETWEEN 30 AND 90
+    </when>
+    <otherwise>
+      AND access_level < 30
+    </otherwise>
+  </choose>
+</select>
+```
+
+**3.`<where>`**
+
+**作用**：智能处理 WHERE 子句（自动去除开头多余的 AND/OR）
+
+ **4.`<set>`**
+
+**作用**：智能处理 UPDATE 语句（自动去除结尾逗号）
+
+```xml
+<update id="updateUser">
+  UPDATE users
+  <set>
+    <if test="name != null">name = #{name},</if>
+    <if test="age != null">age = #{age},</if>
+  </set>
+  WHERE id = #{id}
+</update>
+```
+
+**5.`<foreach>` - 循环遍历**
+
+**作用**：遍历集合生成 SQL 片段（常用于 IN 条件）
+ ​**​参数​**​：
+
+- •`collection`：要遍历的集合
+- •`item`：当前元素变量名
+- •`index`：索引变量名
+- •`open`：循环开始字符串
+- •`close`：循环结束字符串
+- •`separator`：元素间分隔符 /ˈsepəreɪtər/
+
+```xml
+<select id="findUsersByIds">
+  SELECT * FROM users
+  WHERE id IN
+  <foreach item="id" collection="ids" 
+           open="(" separator="," close=")">
+    #{id}
+  </foreach>
+</select>
+```
+
+**6. `<sql>` 与 `<include>` - SQL 片段重用**
+
+**作用**：定义和引用可重用的 SQL 片段
+
+```xml
+<!-- 定义片段 -->
+<sql id="userColumns">
+  id, username, email
+</sql>
+
+<!-- 引用片段 -->
+<select id="getUsers">
+  SELECT 
+    <include refid="userColumns"/>
+  FROM users
+</select>
+```
+
+**动态 SQL 优势**
+
+1. 1.**避免 SQL 拼接**：不再需要 Java 字符串拼接
+2. 2.**防止 SQL 注入**：自动使用预编译语句
+3. 3.**提高可读性**：SQL 与 Java 代码分离
+4. 4.**条件灵活组合**：根据不同参数生成不同 SQL
+5. 5.**减少重复代码**：通过 SQL 片段重用
+
+
+
+### 13、Mybatis 如何完成MySQL的批量操作
+
+​		MyBatis完成MySQL的批量操作主要是通过<foreach>标签来拼装相应的SQL语句
+
+
+
+### 14、谈谈怎么理解SpringBoot框架
+
+​		Spring Boot 是 Spring 开源组织下的子项目，是 Spring 组件一站式解决方案，主要是简化了使用 Spring 的难度，简省了繁重的配置，提供了各种启动器，开发者能快速上手。
+
+**Spring Boot的优点**
+
+**1.独立运行**
+
+​		Spring Boot而且内嵌了各种servlet容器，Tomcat、Jetty等，现在不再需要打成war包部署到容器中，Spring Boot只要打成一个可执行的jar包就能独立运行，所有的依赖包都在一个jar包内。
+
+**2.简化配置**
+
+​		spring-boot-starter-web启动器自动依赖其他组件，简少了maven的配置。除此之外，还提供了各种启动器，开发者能快速上手。
+
+**3.自动配置**
+
+​		Spring Boot能根据当前类路径下的类、jar包来自动配置bean，如添加一个spring-boot-starter-web启动器就能拥有web的功能，无需其他配置。
+
+**4.无代码生成和XML配置**
+
+​		Spring Boot配置过程中无代码生成，也无需XML配置文件就能完成所有配置工作，这一切都是借助于条件注解完成的，这也是Spring4.x的核心功能之一。
+
+**5.应用监控**
+
+​		Spring Boot提供一系列端点可以监控服务及应用，做健康检测。
+
+**Spring Boot缺点：**
+
+​		Spring Boot虽然上手很容易，但如果你不了解其核心技术及流程，所以一旦遇到问题就很棘手，而且现在的解决方案也不是很多，需要一个完善的过程。
+
+
+### 15、Spring Boot 的核心注解是哪个 它主要由哪几个注解组成的
+
+**核心注解：@SpringBootApplication**
+
+​		`@SpringBootApplication` 是 Spring Boot 最核心的注解，通常用于主启动类上。它是一个组合注解（composed annotation），包含了多个重要注解的功能。
+
+**各组成部分的详细功能**
+
+**@SpringBootConfiguration**
+
+- •继承自 `@Configuration`，表示该类是一个配置类
+- •允许在上下文中注册额外的 Bean 或导入其他配置类
+
+**@EnableAutoConfiguration**
+
+- •自动配置是 Spring Boot 的核心特性
+- •根据类路径中的依赖自动配置 Spring 应用程序
+- •例如：如果 classpath 下有 H2 数据库，则自动配置内存数据库
+
+**@ComponentScan**
+
+- •默认扫描当前包及其子包中的所有组件
+- •可通过属性自定义扫描路径：`@ComponentScan(basePackages = "com.example")`
+- •可排除特定组件：`@ComponentScan(excludeFilters = ...)`
+
+
+
+### 16、Spring Boot自动配置原理是什么
+
+**1.Spring Boot自动配置的核心原理是通过**：
+
+1. 1.**自动发现机制**（配置来源：spring.factories）
+2. 2.**条件过滤系统**（各种@Conditional注解，Spring Boot 使用一系列条件注解进行智能判断）
+3. 3.**属性绑定机制**（使用@ConfigurationProperties 将`application.properties/yml`中的配置绑定到Bean）
+
+这三者的协同工作，实现了根据应用环境智能配置Spring应用的能力。这种设计大幅减少了样板配置代码，同时保留了充分的灵活性，使开发者能够快速构建生产级应用。
+
+**2.自动配置的本质**
+
+​		Spring Boot 自动配置是通过 `@EnableAutoConfiguration` 实现的**智能条件装配系统**：
+
+1. 1.**动态检测**：扫描类路径（Classpath）中的依赖库
+2. 2.**条件判断**：根据存在的类/配置决定是否创建特定Bean
+3. 3.**智能装配**：自动配置组件及其依赖关系
+
+> 示例：当类路径存在 `H2` 数据库驱动时，自动配置内存数据库；存在 `MySQL` 驱动时配置连接池
+
+**3.自动配置流程**
+
+1. 1.**启动扫描**：`@EnableAutoConfiguration` 触发自动配置加载
+2. 2.**读取配置**：加载所有 `META-INF/spring.factories` 中声明的配置类
+3. 3.**条件过滤**：通过条件注解筛选出符合条件的配置类
+4. 4.**Bean装配**：按顺序实例化并注册符合条件的Bean
+
+**4.核心思想**
+
+1. 1.**约定优于配置**：提供合理的默认值
+2. 2.**开箱即用**：常见场景无需额外配置
+3. 3.**逐步覆盖**：允许自定义配置覆盖默认值
+4. 4.**条件智能**：根据环境动态调整配置
+5. 5.**模块化设计**：每个starter提供独立配置
+
+
+
+### 17、SpringBoot配置文件有哪些 怎么实现多环境配置
+
+**1.Spring Boot 配置文件类型**
+
+1.Properties 文件（.properties）
+
+- •**格式**：键值对形式
+
+2.YAML 文件（.yml 或 .yaml）
+
+- •**格式**：层次结构，更易读
+
+Spring Boot 按照以下顺序加载配置（优先级从高到低）：
+
+1. 1.命令行参数（`--server.port=8081`）
+2. 2.当前目录的 `/config` 子目录中的配置文件
+3. 3.当前目录中的配置文件
+4. 4.classpath 下的 `/config` 包中的配置文件
+5. 5.classpath 根目录下的配置文件
+
+
+
+**2.多环境配置实现方式**
+
+1.创建环境特定配置文件
+
+•**命名格式**：`application-{profile}.properties/yml`
+
+•**示例文件**： •`application-dev.yml`（开发环境） •`application-test.yml`（测试环境） •`application-prod.yml`（生产环境）
+
+2.激活特定环境
+
+**方法一：主配置文件指定**
+
+```yaml
+# application.yml
+spring:
+  profiles:
+    active: dev
+```
+
+**方法二：命令行激活**
+
+```bash
+java -jar myapp.jar --spring.profiles.active=prod
+```
+
+
+
+### 18、SpringBoot和SpringCloud是什么关系
+
+Spring Boot 和 Spring Cloud 是**互补而非竞争**的关系，它们共同构成了现代微服务架构的基础：
+
+- •**Spring Boot** = 微服务的**构建单元**
+- •**Spring Cloud** = 微服务的**协调系统**
+
+| 特性维度     | Spring Boot                      | Spring Cloud                          |
+| ------------ | -------------------------------- | ------------------------------------- |
+| **定位**     | 快速开发**单个**应用             | 构建**分布式系统**（微服务架构）      |
+| **功能**     | 简化Spring应用初始化、开发、部署 | 提供分布式系统所需的通用模式实现      |
+| **依赖关系** | 基础框架，可独立使用             | 建立在Spring Boot之上，增强分布式能力 |
+| **核心目标** | 让开发变得简单快捷               | 让分布式系统的构建变得简单            |
+| **典型特性** | 自动配置、起步依赖、内嵌服务器   | 服务发现、配置中心、熔断器、网关      |
+
+​		Spring Boot 是 Spring 的一套快速配置脚手架，可以基于Spring Boot 快速开发单个微服务，Spring Cloud是一个基于Spring Boot实现的开发工具；Spring Boot专注于快速、方便集成的单个微服务个体，Spring Cloud关注全局的服务治理框架； Spring Boot使用了默认大于配置的理念，很多集成方案已经帮你选择好了，能不配置就不配置，Spring Cloud很大的一部分是基于Spring Boot来实现，必须基于Spring Boot开发。
+
+ 		可以单独使用Spring Boot开发项目，但是Spring Cloud离不开 Spring Boot。
+
+
+### 19、SpringCloud都用过哪些组件 介绍一下作用
+
+1.**Eureka** - 服务注册中心
+
+**作用**：服务注册与发现，微服务的"电话簿"
+
+2.**Spring Cloud Gateway** - API网关
+
+**作用**：统一入口、路由转发、过滤拦截
+
+3.**OpenFeign** - 声明式REST客户端
+
+**作用**：简化服务间HTTP调用
+
+4.**Zipkin** - 分布式链路追踪
+
+**作用**：跟踪请求在微服务间的流转路径
+
+5.**Resilience4j** - 熔断器（替代Hystrix）
+
+**作用**：防止服务雪崩，提供弹性功能
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
