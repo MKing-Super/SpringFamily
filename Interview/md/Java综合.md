@@ -4152,6 +4152,246 @@ SUNION set1 set2  # 输出: 1) "A" 2) "B" 3) "C" 4) "D" 5) "E" 6) "F"
 
 
 
+### 6、为什么Redis的操作是原子性的，怎么保证原子性的
+
+在 Redis 中，**原子性**指的是：
+
+- **单命令操作**：每个 Redis 命令执行时不会被其他命令中断
+- **多命令组合**：通过特定机制保证一组命令的不可分割性
+- **执行结果**：要么全部成功，要么全部失败（无中间状态）
+
+![](.\images\e_06.png)
+
+**关键机制**：
+
+- Redis 使用**单线程处理所有命令**
+- 每个命令执行**不会被中断**，直到完成
+- 天然避免了多线程的**竞态条件**和**锁竞争**
+
+
+
+### 7、Redis有事务吗
+
+​		**是的，Redis 支持事务**，但与传统关系型数据库（如 MySQL）的 ACID 事务有显著区别。Redis 事务的核心是 **MULTI/EXEC 命令组合**，它们提供了原子性执行的能力，但**不支持回滚（Rollback）**。
+
+> multi	/ˈmʌlti/	多
+>
+> exec	/ɪɡˈzek/	执行
+>
+> queued	/kjuːd/	排队
+
+```bash
+redis 127.0.0.1:6379> MULTI
+OK
+redis 127.0.0.1:6379> set name mk
+QUEUED
+redis 127.0.0.1:6379> set age 10
+QUEUED
+redis 127.0.0.1:6379> EXEC
+1) OK
+2) OK
+```
+
+​		当输入MULTI命令后，服务器返回OK表示事务开始成功，然后依次输入需要在本次事务中执行的所有命令，每次输入一个命令服务器并不会马上执行，而是返回”QUEUED”，这表示命令已经被服务器接受并且暂时保存起来，最后输入EXEC命令后，本次事务中的所有命令才会被依次执行，可以看到最后服务器一次性返回了两个OK，这里返回的结果与发送的命令是按顺序一一对应的，这说明这次事务中的命令全都执行成功了。
+
+​		Redis的事务除了保证所有命令要不全部执行，要不全部不执行外，还能保证一个事务中的命令依次执行而不被其他命令插入。同时，redis的事务是不支持回滚操作的。
+
+
+### 8、Redis数据和MySQL数据库的一致性如何实现
+
+**1.延迟双删**
+
+为什么需要“双删”？
+
+​		一个**读请求**在写请求**更新数据库后、删除缓存前**的极短时间窗口内，读取了旧数据并将其重新加载到了缓存中，导致缓存被污染。
+
+过程：
+
+1）先删除缓存（第一次删除）；
+
+2）再写数据库；
+
+3）休眠500毫秒（根据具体的业务时间来定，包括redis集群同步时间）；
+
+4）再次删除缓存（第二次删除）。
+
+​		**第二次删除的核心目的**：清除掉在“更新数据库”到“第一次删除缓存”这个极短时间窗口内，可能被其他读请求写入缓存的**脏数据**。
+
+**2.监听binlog同步redis**
+
+前期：maven引入 Canal 客户端 依赖。
+
+1）监听指定字典表的指定数据
+
+2）发生更新、删除等操作时异步更改redis值
+
+
+
+### 9、缓存击穿，缓存穿透，缓存雪崩的原因和解决方案
+
+| **问题**     | **描述**                                    | **根本原因**                  | **危害**                   |
+| ------------ | ------------------------------------------- | ----------------------------- | -------------------------- |
+| **缓存击穿** | 某个**热点Key**过期瞬间，大量请求直达数据库 | 热点Key集中失效               | 数据库短期压力剧增         |
+| **缓存穿透** | 查询**不存在的数据**，缓存和数据库都没有    | 恶意攻击或业务bug             | 数据库持续被无效查询冲击   |
+| **缓存雪崩** | **大量Key同时失效**，或Redis服务宕机        | 批量Key设置相同TTL、Redis宕机 | 数据库压力过大导致系统崩溃 |
+
+**1.缓存击穿**
+
+​		一个**访问非常频繁的热点Key**（如明星绯闻、热门商品）在过期瞬间，大量并发请求无法从缓存中读到数据，同时去访问数据库，导致数据库瞬间压力过大。
+
+1.1 互斥锁（Mutex Lock） - 推荐
+
+```java
+public Object getData(String key) {
+    Object value = redisTemplate.opsForValue().get(key);
+    if (value == null) {
+        // 尝试获取分布式锁
+        String lockKey = "lock:" + key;
+        if (redisTemplate.opsForValue().setIfAbsent(lockKey, "1", 30, TimeUnit.SECONDS)) {
+            try {
+                // 获取锁成功，查询数据库
+                value = database.query(key);
+                // 写入缓存
+                redisTemplate.opsForValue().set(key, value, 1, TimeUnit.HOURS);
+            } finally {
+                // 释放锁
+                redisTemplate.delete(lockKey);
+            }
+        } else {
+            // 未获取到锁，短暂等待后重试
+            Thread.sleep(100);
+            return getData(key); // 重试
+        }
+    }
+    return value;
+}
+```
+
+1.2 逻辑过期（Logical Expiration）
+
+​		不设置实际的Redis过期时间，而是在value中存储过期时间戳：
+
+1.3 永不过期 + 异步更新
+
+​		对真正的热点Key设置为永不过期，通过后台任务定期更新：
+
+**2.缓存穿透（Cache Penetration）**
+
+​		请求查询**数据库中根本不存在的数据**。导致每次请求都穿透缓存直达数据库，可能被恶意攻击利用。
+
+2.1 缓存空值（Null Caching）
+
+```java
+public Object getData(String key) {
+    Object value = redisTemplate.opsForValue().get(key);
+    if (value != null) {
+        // 如果是特殊空值标记，直接返回null
+        if (NULL_VALUE.equals(value)) {
+            return null;
+        }
+        return value;
+    }
+    
+    // 查询数据库
+    value = database.query(key);
+    if (value == null) {
+        // 数据库也没有，缓存空值（设置较短过期时间）
+        redisTemplate.opsForValue().set(key, NULL_VALUE, 5, TimeUnit.MINUTES);
+        return null;
+    }
+    
+    // 数据库有数据，写入缓存
+    redisTemplate.opsForValue().set(key, value, 1, TimeUnit.HOURS);
+    return value;
+}
+```
+
+**3.缓存雪崩（Cache Avalanche）**
+
+​		**大量缓存Key在同一时间点失效**，或者Redis服务宕机，导致所有请求直达数据库，造成数据库压力过大甚至崩溃。
+
+3.1 差异化过期时间
+
+```java
+// 为Key设置基础过期时间 + 随机偏移量
+public void setCache(String key, Object value, long baseTimeout, TimeUnit unit) {
+    // 生成随机偏移量（±10%）
+    long randomOffset = (long) (baseTimeout * 0.2 * Math.random()); 
+    long timeout = unit.toMillis(baseTimeout) + randomOffset;
+    
+    redisTemplate.opsForValue().set(
+        key, value, timeout, TimeUnit.MILLISECONDS
+    );
+}
+```
+
+
+
+### 10、哨兵模式是什么样的
+
+​		Redis Sentinel（哨兵）是Redis官方提供的**高可用性解决方案**，用于管理Redis主从架构，实现自动故障转移、监控和通知。
+
+​		**哨兵模式的本质**：通过运行特殊的Redis哨兵进程，监控主从节点的健康状态，并在主节点故障时**自动选举新的主节点**，完成故障转移。
+
+> raft	/ræft/	筏
+>
+> quorum	/ˈkwɔːrəm/	法定人数
+
+**1 主观下线（Subjective Down，SDOWN）**
+
+**定义**：某个**单独的哨兵实例**自己认为主节点不可用。
+
+**触发条件**：哨兵按照配置（`down-after-milliseconds`，默认30秒）定期向所有节点（主、从、其他哨兵）发送 `PING`命令。如果对方在指定时间内返回了无效响应（如超时、返回错误等）或根本没有响应。
+
+注意：这个超时时间对**所有类型的节点**都有效。如果一台机器网络拥塞，可能导致哨兵同时认为主节点、从节点和其他哨兵都“主观下线”了。
+
+- **性质**：**单机观点**，并不代表主节点真的挂了，可能只是这个哨兵到主节点之间的网络出现了临时问题。
+
+**2 客观下线（Objective Down，ODOWN）**
+
+**定义**：**足够数量的哨兵**（达成共识）都认为主节点不可用。
+
+**触发条件**：当一个哨兵判断主节点“主观下线”后，它会向**其他所有哨兵**发送命令，询问它们是否也认为该主节点下线了。其他哨兵会根据自身与主节点的连接情况回复 **“同意”** 或 **“拒绝”**。
+
+如果收到的**同意票数**达到了配置文件中设定的 **`quorum`** 值（法定人数），那么这个哨兵就会将主节点状态标记为“客观下线”（`odown`），并立即发起故障转移流程。
+
+- **性质**：**集群共识**，表明主节点故障是大概率事件，可以安全地启动故障转移。
+
+**3 选举领头哨兵（Leader Election）**
+
+​		一旦确认为“客观下线”，哨兵们需要选举出一个**领头哨兵**（Leader）来负责执行具体的故障转移操作。
+
+​		选举采用了 **Raft算法** 的变种，每个“客观下线”的确认者都会要求其他哨兵投票给自己。
+
+​		获得**多数票**（`> N/2`，注意这个多数票和`quorum`值不同）的哨兵成为Leader。如果一次选举失败，一段时间后会重新进行选举。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
