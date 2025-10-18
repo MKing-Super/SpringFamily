@@ -88,6 +88,26 @@
 4. 解压、解码数据块。
 5. 从数据块中找到维度列前缀对应的数据项。
 
+### 3 建表标准格式
+
+```sql
+CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
+(column_definition1[, column_definition2, ...]
+[, index_definition1[, index_definition2, ...]])
+[ENGINE = [olap|mysql|elasticsearch|hive|iceberg|hudi|jdbc]]
+[key_desc]
+[COMMENT "table comment"]
+[partition_desc]
+distribution_desc
+[rollup_index]
+[PROPERTIES ("key"="value", ...)]
+[BROKER PROPERTIES ("key"="value", ...)]
+```
+
+
+
+
+
 ### 3 数据模型
 
 - **明细模型**：表中会存在主键重复的数据行，并且与导入的数据是完全对应的。您可以召回所导入的全部历史数据。
@@ -133,7 +153,7 @@ PROPERTIES (
 
 
 
-#### 3.4 更新模型
+#### 3.3 更新模型
 
 ```sql
 CREATE TABLE IF NOT EXISTS orders (
@@ -151,7 +171,7 @@ PROPERTIES (
 
 
 
-#### 3.3 主键模型
+#### 3.4 主键模型
 
 ```sql
 create table users (
