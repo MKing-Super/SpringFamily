@@ -88,6 +88,126 @@
 4. 解压、解码数据块。
 5. 从数据块中找到维度列前缀对应的数据项。
 
+### 3 建表标准格式
+
+```sql
+CREATE [EXTERNAL] TABLE [IF NOT EXISTS] [database.]table_name
+(column_definition1[, column_definition2, ...]
+[, index_definition1[, index_definition2, ...]])
+[ENGINE = [olap|mysql|elasticsearch|hive|iceberg|hudi|jdbc]]
+[key_desc]
+[COMMENT "table comment"]
+[partition_desc]
+distribution_desc
+[rollup_index]
+[PROPERTIES ("key"="value", ...)]
+[BROKER PROPERTIES ("key"="value", ...)]
+```
+
+
+
+
+
+### 3 数据模型
+
+- **明细模型**：表中会存在主键重复的数据行，并且与导入的数据是完全对应的。您可以召回所导入的全部历史数据。
+- **聚合模型**：表中不存在主键重复的数据行，主键满足唯一性约束。导入的数据中主键重复的数据行聚合为一行，即具有相同主键的指标列，会通过聚合函数进行聚合。您只能召回导入的全部历史数据的聚合结果，但是无法召回历史明细数据。
+- **主键模型** 和 **更新模型**：表中不存在主键重复的数据行，主键满足唯一性约束。最新导入的数据行，替换掉其他主键重复的数据行。这两种模型可以视为聚合模型的特殊情况，相当于在聚合模型中，为表的指标列指定聚合函数为 REPLACE，REPLACE 函数返回主键相同的一组数据中的最新数据。
+
+#### 3.1 明细模型
+
+```sql
+CREATE TABLE IF NOT EXISTS detail (
+    event_time DATETIME NOT NULL COMMENT "datetime of event",
+    event_type INT NOT NULL COMMENT "type of event",
+    user_id INT COMMENT "id of user",
+    device_code INT COMMENT "device code",
+    channel INT COMMENT ""
+)
+DUPLICATE KEY(event_time, event_type)
+DISTRIBUTED BY HASH(user_id) BUCKETS 8
+PROPERTIES (
+	"replication_num" = "3"
+);
+```
+
+
+
+#### 3.2 聚合模型
+
+支持的聚合函数：SUM、MAX、MIN、REPLACE
+
+```sql
+CREATE TABLE IF NOT EXISTS example_db.aggregate_tbl (
+    site_id LARGEINT NOT NULL COMMENT "id of site",
+    date DATE NOT NULL COMMENT "time of event",
+    city_code VARCHAR(20) COMMENT "city_code of user",
+    pv BIGINT SUM DEFAULT "0" COMMENT "total page views"
+)
+AGGREGATE KEY(site_id, date, city_code)
+DISTRIBUTED BY HASH(site_id) BUCKETS 8
+PROPERTIES (
+	"replication_num" = "3"
+);
+```
+
+
+
+#### 3.3 更新模型
+
+```sql
+CREATE TABLE IF NOT EXISTS orders (
+    create_time DATE NOT NULL COMMENT "create time of an order",
+    order_id BIGINT NOT NULL COMMENT "id of an order",
+    order_state INT COMMENT "state of an order",
+    total_price BIGINT COMMENT "price of an order"
+)
+UNIQUE KEY(create_time, order_id)
+DISTRIBUTED BY HASH(order_id) BUCKETS 8
+PROPERTIES (
+	"replication_num" = "3"
+); 
+```
+
+
+
+#### 3.4 主键模型
+
+```sql
+create table users (
+    user_id bigint NOT NULL,
+    name string NOT NULL,
+    email string NULL,
+    address string NULL,
+    age tinyint NULL,
+    sex tinyint NULL,
+    last_active datetime,
+    property0 tinyint NOT NULL,
+    property1 tinyint NOT NULL,
+    property2 tinyint NOT NULL,
+    property3 tinyint NOT NULL
+) PRIMARY KEY (user_id)
+DISTRIBUTED BY HASH(user_id) BUCKETS 4
+PROPERTIES (
+    "replication_num" = "3",
+    "enable_persistent_index" = "true"
+);
+```
+
+> `enable_persistent_index`参数
+>
+> - **作用**：控制是否启用持久化索引功能
+> - **默认值**：从 StarRocks 2.3 版本开始默认启用（true）
+> - **适用场景**：主要用于主键模型（Primary Key）表
+
+### 什么是持久化索引？
+
+- **传统索引**：通常存储在内存中，查询速度快但占用大量内存资源
+- **持久化索引**：将索引数据存储在磁盘上，仅在需要时加载到内存
+- **工作方式**：在查询时按需加载索引块，而不是一次性加载整个索引
+
+
+
 
 
 ## #、常见问题
