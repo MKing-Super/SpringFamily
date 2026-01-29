@@ -123,3 +123,69 @@ WebSocket 是基于 TCP 的应用层协议，它自然继承了 TCP 的全双工
 
 
 
+
+
+## 三、场景
+
+### 1 使用Netty框架实现Websocket
+
+​		在websocket服务器上会使用2个端口来实现，包括 连接页面websocket的端口、连接其他服务器的端口。
+
+连接websocket页面：
+
+​		netty支持websocket协议，使用WebSocketServerProtocolHandler处理来自页面websocket的信息，包括首次的http请求、请求后的长链接。
+
+连接其他服务器：
+
+​		连接其他服务器不需要指定使用websocket进行通信，只要能做到其他服务器对websocket服务器发送消息即可。需要客户端（其他服务器）和服务端（websocket的服务器）之间统一格式，做到两边可以通信即可。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
