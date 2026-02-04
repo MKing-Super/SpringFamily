@@ -241,7 +241,7 @@ SUNION set1 set2  # 输出: 1) "A" 2) "B" 3) "C" 4) "D" 5) "E" 6) "F"
 - **多命令组合**：通过特定机制保证一组命令的不可分割性
 - **执行结果**：要么全部成功，要么全部失败（无中间状态）
 
-![](E:/MK/SpringFamily/Interview/md/images/e_06.png)
+![](./images/e_06.png)
 
 **关键机制**：
 
@@ -568,7 +568,7 @@ public void setCache(String key, Object value, long baseTimeout, TimeUnit unit) 
 
 ​		核心思想是：**先进行数据分片，然后为每一个分片配置主从复制**，从而实现高可用。
 
-![](E:/MK/SpringFamily/Interview/md/images/e_13.png)
+![](./images/e_13.png)
 
 1 如果崩溃的是**从节点**（Slave）
 

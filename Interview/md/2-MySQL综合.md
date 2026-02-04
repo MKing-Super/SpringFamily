@@ -1,7 +1,3 @@
-
-
-
-
 # MySQL综合
 
 ## 四、MySQL
@@ -571,11 +567,11 @@ SELECT * FROM small_table WHERE indexed_column = 'value';
 
 B-tree
 
-![](E:/MK/SpringFamily/Interview/md/images/d_07_1.png)
+![](./images/d_07_1.png)
 
 B+tree
 
-![](E:/MK/SpringFamily/Interview/md/images/d_07_2.png)
+![](./images/d_07_2.png)
 
 **1 数据存储方式**
 
