@@ -82,7 +82,7 @@
 - 释放cpu给其它线程，同时释放锁资源
 - wait 方法必须配合 synchronized 一起使用，不然在运行时就会抛出IllegalMonitorStateException异常
 
-> ## 锁资源的概念
+> **锁资源的概念**
 >
 > **锁资源**指的是通过`synchronized`关键字或`Lock`对象获取的线程同步控制权。当一个线程持有锁时，其他试图获取同一锁的线程会被阻塞。
 
