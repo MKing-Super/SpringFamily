@@ -25,7 +25,7 @@
 
 简易：
 
-![](E:/MK/SpringFamily/Interview/md/images/b_02-1.png)
+![](./images/b_02-1.png)
 
 **一、核心内存分区与作用**
 

@@ -511,7 +511,7 @@ map.put("B", null);    // 再次存入 null value
 
 ### 17、线程的状态转换有什么（生命周期）
 
-![](E:/MK/SpringFamily/Interview/md/images/a_17.png)
+![](./images/a_17.png)
 
 1.新建状态(New) ：线程对象被创建后，就进入了新建状态。例如，Thread thread = new Thread()。
 2.就绪状态(Runnable): 也被称为“可执行状态”。线程对象被创建后，其它线程调用了该对象的start()方法，从而来启动该线程。例如，thread.start()。处于就绪状态的线程，随时可能被CPU调度执行。
@@ -577,7 +577,7 @@ Thread类  public void interrupt()方法
 
 ​		字节流以8位字节(byte)为单位进行数据读写，适合处理二进制数据。
 
-![](E:/MK/SpringFamily/Interview/md/images/a_18_1.png)
+![](./images/a_18_1.png)
 
 核心字节流类
 
@@ -607,7 +607,7 @@ Thread类  public void interrupt()方法
 
 ​		字符流以16位Unicode字符(char)为单位进行数据读写，适合处理文本数据。
 
-![](E:/MK/SpringFamily/Interview/md/images/a_18_2.png)
+![](./images/a_18_2.png)
 
 核心字符流类
 
