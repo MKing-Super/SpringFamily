@@ -119,7 +119,7 @@
 
 ​	a) 效率低速度慢，需要移动对象，但不会产生碎片。
 
-### **4、如何判断一个对象是否存活**
+### 4、如何判断一个对象是否存活
 
 1.**引用计数法**
 
@@ -147,7 +147,7 @@
 - 代码中存在死循环或循环产生过多重复的对象实体
 - 启动参数内存值设定的过小
 
-### **6、什么是线程池，线程池有哪些（创建）**
+### 6、什么是线程池，线程池有哪些（创建）
 
 ​		线程池就是事先将多个线程对象放到一个容器中，当使用的时候就不用 new 线程而是直接去池中拿线程即可，节省了开辟子线程的时间，提高的代码执行效率。
 
@@ -190,7 +190,7 @@ ExecutorService newSingleThreadExecutor = Executors.newSingleThreadExecutor();
 ​		创建一个定长的线程池，而且支持定时的以及周期性的任务执行。例如延迟3秒执行。
 
 
-### **7、为什么要使用线程池** 
+### 7、为什么要使用线程池 
 
 ​		线程池做的工作主要是控制运行的线程数量，处理过程中将任务放入队列，然后在线程创建后启动这些任务，如果线程数量超过了最 大数量，超出数量的线程排队等候，等其它线程执行完毕，再从队列中取出任务来执行。
 ​		主要特点:线程复用;控制最大并发数:管理线程。
@@ -209,7 +209,7 @@ ExecutorService newSingleThreadExecutor = Executors.newSingleThreadExecutor();
 4. 第四步：如果队列已满，并且线程池中工作线程的数量<maximumPoolSize，还是会创建线程执行这个任务
 5. 第五步：如果队列已满，并且线程池中的线程已达到maximumPoolSize，这个时候会执行拒绝策略，JAVA线程池默认的策略是AbortPolicy，即抛出RejectedExecutionException异常
 
-### **9、ThreadPoolExecutor对象有哪些参数 怎么设定核心线程数和最大线程数 拒绝策略有哪些** 
+### 9、ThreadPoolExecutor对象有哪些参数 怎么设定核心线程数和最大线程数 拒绝策略有哪些 
 
 ```java
 public ThreadPoolExecutor(
@@ -254,13 +254,13 @@ public ThreadPoolExecutor(
 3. DiscardOldestPolicy：丢弃阻塞队列中靠最前的任务，并执行当前任务；
 4. DiscardPolicy：直接丢弃任务；当然也可以根据应用场景实现 RejectedExecutionHandler 接口，自定义饱和策略，如记录日志或持久化存储不能处理的任务。
 
-### **10、常见线程安全的并发容器有哪些**
+### 10、常见线程安全的并发容器有哪些
 
 1. CopyOnWriteArrayList、CopyOnWriteArraySet、ConcurrentHashMap
 2. CopyOnWriteArrayList、CopyOnWriteArraySet采用写时复制实现线程安全
 3. ConcurrentHashMap采用分段锁的方式实现线程安全
 
-### **11、Atomic原子类了解多少 原理是什么**
+### 11、Atomic原子类了解多少 原理是什么
 
 ​		**Atomic原子类的主要作用是提供了一种无需加锁（如`synchronized`）即可实现线程安全操作的机制。** 它用于在多线程环境下，保证对单个变量（如整数、布尔值、对象引用）的“读-改-写”操作是原子性的、线程安全的。
 
@@ -377,27 +377,27 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 
 
 
-### **12、synchronized底层实现是什么 lock底层是什么 有什么区别**
+### 12、synchronized底层实现是什么 lock底层是什么 有什么区别
 
 
 
-### **13、了解ConcurrentHashMap吗 为什么性能比HashTable高，说下原理**
+### 13、了解ConcurrentHashMap吗 为什么性能比HashTable高，说下原理
 
 ​		ConcurrentHashMap是线程安全的Map容器，JDK8之前，ConcurrentHashMap使用锁分段技术，将数据分成一段段存储，每个数据段配置一把锁，即segment类，这个类继承ReentrantLock来保证线程安全，JKD8的版本取消Segment这个分段锁数据结构，底层也是使用Node数组+链表+红黑树，从而实现对每一段数据就行加锁，也减少了并发冲突的概率。
 
 ​		hashtable类基本上所有的方法都是采用synchronized进行线程安全控制，高并发情况下效率就降低 ，ConcurrentHashMap是采用了分段锁的思想提高性能，锁粒度更细化
 
 
-### **14、ConcurrentHashMap底层原理**
+### 14、ConcurrentHashMap底层原理
 
 
 
-### **15、了解volatile关键字**
+### 15、了解volatile关键字
 
 1. volatile是Java提供的最轻量级的同步机制，保证了共享变量的可见性，被volatile关键字修饰的变量，如果值发生了变化，其他线程立刻可见，避免出现脏读现象。
 2. volatile禁止了指令重排，可以保证程序执行的有序性，但是由于禁止了指令重排，所以JVM相关的优化没了，效率会偏弱
 
-### **16、synchronized和volatile有什么区别**
+### 16、synchronized和volatile有什么区别
 
 1. volatile本质是告诉JVM当前变量在寄存器中的值是不确定的，需要从主存中读取，synchronized则是锁定当前变量，只有当前线程可以访问该变量，其他线程被阻塞住。
 2. volatile仅能用在变量级别，而synchronized可以使用在变量、方法、类级别。
@@ -405,7 +405,7 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 4. volatile不会造成线程阻塞，synchronized可能会造成线程阻塞。
 5. volatile标记的变量不会被编译器优化，synchronized标记的变量可以被编译器优化。
 
-### **17、Java类加载过程** 
+### 17、Java类加载过程 
 
 ​		Java 类加载过程可以分为三个主要阶段：**加载（Loading）**、**链接（Linking）** 和 **初始化（Initialization）**。链接阶段又可细分为验证、准备和解析三个子阶段。
 
@@ -444,7 +444,7 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 
 
 
-### **18、什么是类加载器，类加载器有哪些**
+### 18、什么是类加载器，类加载器有哪些
 
 ​		类加载器就是把类文件加载到虚拟机中，也就是说通过一个类的全限定名来获取描述该类的二进制字节流。
 
@@ -463,7 +463,7 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 2. 单元测试中的模拟和隔离
 3. 动态扩展和插件架构
 
-### **19、简述java内存分配与回收策略以及Minor GC和Major GC（full GC）** 
+### 19、简述java内存分配与回收策略以及Minor GC和Major GC（full GC） 
 
 **栈区：**栈分为java虚拟机栈和本地方法栈
 
@@ -483,11 +483,11 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 ​		当Eden区没有足够的空间进行分配时，虚拟机会执行一次Minor GC.Minor GC通常发生在新生代的Eden区，在这个区的对象生存期短，往往发生GC的频率较高，回收速度比较快;Full Gc/Major GC 发生在老年代，一般情况下，触发老年代GC的时候不会触发Minor GC,但是通过配置，可以在Full GC之前进行一次Minor GC这样可以加快老年代的回收速度。
 
 
-### **20、如何查看java死锁** 
+### 20、如何查看java死锁 
 
 
 
-### **21、Java死锁如何避免**
+### 21、Java死锁如何避免
 
 造成死锁的几个原因
 
