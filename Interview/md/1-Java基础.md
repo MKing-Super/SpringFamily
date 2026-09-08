@@ -125,7 +125,7 @@
 >
 > p2被唤醒，从wait()出继续执行，生产1
 >
-> p2被唤醒，从wait()出继续执行（由于用if判断，没有获取buffer最新容量），生产2，此时buffer溢出异常
+> p3被唤醒，从wait()出继续执行（由于用if判断，没有获取buffer最新容量），生产2，此时buffer溢出异常
 
 
 
@@ -256,18 +256,18 @@ equals方法是从Object类中继承的，默认的实现就是使用==
 | protected native Object clone()                 | 创建并返回此对象的一个副本。                                 |
 | public boolean equals(Object obj)               | 指示某个其他对象是否与此对象“相等                            |
 | protected void finalize()                       | 当垃圾回收器确定不存在对该对象的更多引用时，由对象的垃圾回收器调用此方法。 |
-| public final Class<? extends Object> getClass() | 返回一个对象的运行时类。获取运行类的相关信息                 |
+| public final Class<? extends Object> getClass() | 返回一个对象的运行时的类。获取运行类的相关信息               |
 | public native int hashCode();                   | 返回该对象的哈希码值。                                       |
 | public final native void notify()               | 唤醒在此对象监视器上等待的单个线程。                         |
 | public final native void notifyAll();           | 唤醒在此对象监视器上等待的所有线程。                         |
 | public String toString()                        | 返回该对象的字符串表示。                                     |
-| public final native void wait()                 | 导致当前的线程等待，直到其他线程调用此对象的 notify() 方法或 notifyAll() 方，或者超过指定的时间量。 |
+| public final native void wait()                 | 导致当前的线程等待，直到其他线程调用此对象的 notify() 方法或 notifyAll() 方，或者超过指定的时间量。wait 方法必须配合 synchronized 一起使用，不然在运行时就会抛出IllegalMonitorStateException异常 |
 
 **11.1 getClass() 与 `instanceof` 的区别**
 
 | 方法/操作符 | 作用                           | 示例                           |
 | ----------- | ------------------------------ | ------------------------------ |
-| getClass()  | 返回对象的运行时类             | obj.getClass() == String.class |
+| getClass()  | 返回对象运行时的类             | obj.getClass() == String.class |
 | instanceof  | 检查对象是否属于某个类或其子类 | obj instanceof String          |
 
 > ```java
@@ -379,7 +379,7 @@ Map<String, Integer> map = new HashMap<>((int) (expectedSize / 0.75f));
 
 
 
-### 13、ArrarList和LinkedList区别
+### 13、ArraryList和LinkedList区别
 
 1. ArrayList是实现了基于动态数组的数据结构，LinkedList基于链表的数据结构。
 2. 对于随机访问get和set，ArrayList效率优于LinkedList，因为LinkedList要移动指针。
