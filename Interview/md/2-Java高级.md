@@ -605,6 +605,145 @@ CAS 是一种乐观锁机制，它包含三个操作数：
 
 ### 20、如何查看java死锁 
 
+排查 Java 死锁通常分三步：**确认是否真死锁 → 拿到线程快照 → 定位互相等待的锁**。下面从命令行到代码、再到线上工具，按实战顺序讲。
+
+一、命令行工具（最基础，线上首选）
+
+1. jstack 直接看死锁（最常用）
+
+```bash
+jps -l                      # 先查 PID
+jstack -l <pid> > dump.txt  # -l 会额外打印锁的附加信息
+```
+
+**关键**：`jstack` 内置了死锁检测，如果真有死锁，日志**最末尾**会直接输出：
+
+```
+Found one Java-level deadlock:
+=============================
+"Thread-A":
+  waiting to lock monitor 0x00007f8c4c0032c8 (object 0x000000076ab5c3a0, a java.lang.Object),
+  which is held by "Thread-B"
+"Thread-B":
+  waiting to lock monitor 0x00007f8c4c0056a8 (object 0x000000076ab5c3b0, a java.lang.Object),
+  which is held by "Thread-A"
+
+Java stack information for the threads listed above:
+===================================================
+"Thread-A":
+    at DeadLockDemo.lambda$main$0(DeadLockDemo.java:25)
+    - waiting to lock <0x000000076ab5c3a0> (a java.lang.Object)
+    - locked <0x000000076ab5c3b0> (a java.lang.Object)
+"Thread-B":
+    at DeadLockDemo.lambda$main$1(DeadLockDemo.java:40)
+    - waiting to lock <0x000000076ab5c3b0> (a java.lang.Object)
+    - locked <0x000000076ab5c3a0> (a java.lang.Object)
+
+Found 1 deadlock.
+```
+
+**读法**：`- locked <0x...>` 表示自己持有的锁，`waiting to lock <0x...>` 表示在等谁的锁。两边一对照，循环等待链就出来了。
+
+> 建议**连续 jstack 3 次**（间隔 5 秒），如果某几个线程状态一直是 `BLOCKED` 且等待的锁对象不变，基本可确认真死锁（而不是短暂锁竞争）。
+
+2. jcmd（JDK 7+ 推荐，jstack 的现代替代）
+
+```bash
+jcmd <pid> Thread.print -l > dump.txt
+```
+
+效果等同 jstack，官方更推荐。
+
+3. 进程无响应 / 已挂起时
+
+```bash
+jstack -F <pid>     # 强制 dump（Linux 上用 SIGQUIT）
+kill -3 <pid>       # 另一种方式，输出到 stdout（容器里看日志）
+```
+
+------
+
+二、代码内检测（用于自监控 / 告警）
+
+用 `ThreadMXBean` 可以在程序运行时主动发现死锁：
+
+```java
+ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+long[] deadlockedIds = bean.findDeadlockedThreads();   // 只找 Java 级别死锁
+// 或用 findMonitorDeadlockedThreads() 只查 monitor 锁
+
+if (deadlockedIds != null) {
+    ThreadInfo[] infos = bean.getThreadInfo(deadlockedIds, true, true);
+    for (ThreadInfo info : infos) {
+        System.out.println("死锁线程: " + info.getThreadName());
+        System.out.println("  等待的锁: " + info.getLockInfo());
+        System.out.println("  锁的持有者: " + info.getLockOwnerName());
+        for (StackTraceElement e : info.getStackTrace()) {
+            System.out.println("    " + e);
+        }
+    }
+}
+```
+
+**实战用法**：
+
+- 配合 **Spring Boot Actuator** 暴露健康检查端点
+- 或者起一个**定时调度线程**（如每 30 秒）跑一次检测，发现死锁就告警 + 自动 dump 线程栈
+
+------
+
+三、Arthas（线上神器，强烈推荐）
+
+阿里开源的 Java 诊断工具，**不用改代码、不用重启**：
+
+```bash
+# 启动
+java -jar arthas-boot.jar
+
+# 一键找死锁（最方便）
+thread -b
+```
+
+`thread -b` 会直接找出**当前阻塞其他线程的那个"罪魁祸首"线程**，并打印它的完整栈：
+
+```
+"Thread-A" Id=25 BLOCKED on java.lang.Object@6b2ea799
+    at DeadLockDemo.lambda$main$0(DeadLockDemo.java:25)
+    -  blocked on java.lang.Object@6b2ea799
+    -  locked java.lang.Object@4c3e479f   <- but blocks 1 other threads!
+```
+
+其他常用命令：
+
+```bash
+thread              # 查看所有线程状态
+thread -n 3         # 查看 CPU 占用最高的 3 个线程
+thread --state BLOCKED   # 只看 BLOCKED 状态的线程
+```
+
+
+
+实战排查流程（面试/述职都好用的套路）
+
+1. **先看现象**：接口超时、TPS 掉到 0、CPU 不高但请求全挂、日志停在某个位置
+2. **抓线程栈**：`jstack -l` 或 `jcmd Thread.print`，**连续抓 3 次**，每次间隔几秒
+3. **看状态分布**：大量线程处于 `BLOCKED` / `WAITING` → 重点排查
+4. **找循环等待链**：谁 `locked` 了什么、`waiting to lock` 什么，画出等待图
+5. **定位业务代码**：根据栈里的类名行号回到源码，确认锁的获取顺序
+6. **用工具交叉验证**：用 Arthas `thread -b`
+
+**一句话总结**：
+
+> 线上优先 **Arthas `thread -b`** 一键定位；没有 Arthas 就 **`jstack -l` 连抓三次**看 `Found one Java-level deadlock`；要主动发现就上 **`ThreadMXBean.findDeadlockedThreads()`**。
+
+
+
+**绝大多数情况下，是的——查出来死锁后，根治手段就是改代码。**面试标准答法：
+
+> 查出来死锁后，运行期只能重启或止损，不能自动恢复；根因是加锁顺序或持锁逻辑缺陷，所以应通过改代码根治。优先固定加锁顺序，其次缩小同步块、用 tryLock 超时、换 Concurrent 容器；第三方库导致的就升级或绕开。同时可加 ThreadMXBean 检测做告警兜底，但兜底不等于修复。
+
+
+
 
 
 ### 21、Java死锁如何避免
