@@ -83,7 +83,7 @@ public class Quiz03 {
         System.out.println(curFile.pwd);
     }
 
-    static class Files {
+    private static class Files {
         // 父级
         Files father;
         // 文件夹名称
