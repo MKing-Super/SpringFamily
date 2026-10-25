@@ -974,13 +974,13 @@ spring.datasource.hikari.max-lifetime=3600000
 
 ​		这是理解锁规则的核心 ——InnoDB 的查询分两种模式，决定了是否加锁：
 
-#### 1. 快照读（默认）
+**1. 快照读（默认）**
 
 - 行为：读取数据的 “历史快照”（基于 MVCC 多版本控制），**不加任何锁**，不阻塞其他事务的读写；
 - 适用：普通`SELECT`语句（事务内 / 外）；
 - 目的：提升并发读性能，避免读阻塞写、写阻塞读。
 
-#### 2. 当前读（显式加锁）
+**2. 当前读（显式加锁）**
 
 - 行为：读取数据的 “最新版本”，并对读取的行加锁（S 锁或 X 锁），会阻塞冲突的锁请求；
 - 适用：`SELECT ... LOCK IN SHARE MODE`/`SELECT ... FOR UPDATE`/`UPDATE`/`DELETE`；
@@ -988,3 +988,129 @@ spring.datasource.hikari.max-lifetime=3600000
 
 
 
+### 18 两条更新语句同时对同一条数据进行更新
+
+​		MySQL 通过**锁机制**来处理多条更新语句同时对同一条数据的并发写入，具体行为取决于存储引擎和事务隔离级别。
+
+------
+
+核心机制：行级锁
+
+MySQL 的 InnoDB 存储引擎（最常用）默认使用**行级锁**，保证同一时间只有一条更新语句能真正修改某一行数据。
+
+------
+
+两种典型场景
+
+**场景一：自动提交模式（每条语句独立事务）**
+
+```sql
+-- 会话A
+UPDATE employee SET salary = 10000 WHERE id = 1;
+
+-- 会话B（同时执行）
+UPDATE employee SET salary = 20000 WHERE id = 1;
+```
+
+**处理流程：**
+
+1. 会话A 先执行，获取 id=1 这一行的**排他锁（X锁）**
+2. 会话B 尝试执行，发现该行已被锁定，**进入等待状态**
+3. 会话A 执行完毕并自动提交，释放锁
+4. 会话B 获取到锁，继续执行更新
+5. **最终结果是会话B写入的值**（20000），会话A的值被覆盖
+
+**场景二：显式事务模式**
+
+```sql
+-- 事务A
+BEGIN;
+UPDATE employee SET salary = 10000 WHERE id = 1;
+-- 还未提交
+
+-- 事务B（同时执行）
+BEGIN;
+UPDATE employee SET salary = 20000 WHERE id = 1;
+```
+
+**处理流程：**
+
+1. 事务A 获取行锁，执行更新但未提交
+
+2. 事务B 等待事务A释放锁，**超时后会报错**（默认50秒超时）
+
+   ```
+   ERROR 1205 (HY000): Lock wait timeout exceeded; try restarting transaction
+   ```
+
+3. 事务A 提交后释放锁，事务B 才能继续
+
+------
+
+**死锁情况**
+
+当两个事务互相等待对方持有的锁时，会发生死锁：
+
+```sql
+-- 事务A
+UPDATE employee SET salary = 10000 WHERE id = 1;
+UPDATE employee SET salary = 15000 WHERE id = 2;
+
+-- 事务B
+UPDATE employee SET salary = 20000 WHERE id = 2;
+UPDATE employee SET salary = 25000 WHERE id = 1;
+```
+
+**处理方式：**
+
+- MySQL 会自动检测死锁
+- **牺牲其中一个事务**（回滚代价较小的一方），让其回滚并报错
+- 另一个事务正常执行
+
+```
+ERROR 1213 (40001): Deadlock found when trying to get lock; try restarting transaction
+```
+
+------
+
+**不同隔离级别下的行为**
+
+| 隔离级别                | 行为                             |
+| ----------------------- | -------------------------------- |
+| READ UNCOMMITTED        | 可能读到未提交的脏数据，极少使用 |
+| READ COMMITTED          | 只能读到已提交的数据，行锁       |
+| REPEATABLE READ（默认） | 可重复读，行锁 + 间隙锁防止幻读  |
+| SERIALIZABLE            | 串行化，锁范围更大，性能最低     |
+
+------
+
+**实际建议**
+
+1. **短事务原则**：更新操作尽量快提交，减少锁持有时间
+
+2. **统一更新顺序**：多个事务涉及多行更新时，按相同顺序操作，避免死锁
+
+3. **设置合理超时**：
+
+   ```sql
+   -- 查看当前锁超时时间
+   SHOW VARIABLES LIKE 'innodb_lock_wait_timeout';
+   
+   -- 设置为30秒
+   SET innodb_lock_wait_timeout = 30;
+   ```
+
+4. **使用乐观锁**：适合并发冲突较少的场景
+
+   ```sql
+   UPDATE employee 
+   SET salary = 10000, version = version + 1
+   WHERE id = 1 AND version = 5;
+   -- 影响行数为0说明数据已被别人修改过
+   ```
+
+------
+
+**一句话总结**
+
+​		MySQL 通过**行级锁**保证同一时刻只有一条更新语句能操作某行数据，其他更新必须等待前一个事务释放锁，如果发生死锁则自动回滚其中一个事务。
