@@ -11,8 +11,8 @@ import java.util.List;
 public class Quiz03 {
 
     public static void main(String[] args) {
-        int[] nums = new int[]{-4,-2,1,-5,-4,-4,4,-2,0,4,0,-2,3,1,-5,0};
-
+//        int[] nums = new int[]{-4,-2,1,-5,-4,-4,4,-2,0,4,0,-2,3,1,-5,0};
+        int[] nums = new int[]{-1,0,1,2,-1,-4};
 
         // 思路错误！！！
         // [-4,-2,1,-5,-4,-4,4,-2,0,4,0,-2,3,1,-5,0]
@@ -20,9 +20,9 @@ public class Quiz03 {
 //        System.out.println(JSON.toJSONString(mk(nums)));
 
         // 思路：双指针
-        System.out.println(JSON.toJSONString(m1(nums)));
+//        System.out.println(JSON.toJSONString(m1(nums)));
 
-
+        System.out.println(JSON.toJSONString(m2(nums)));
     }
 
     private static List<List<Integer>> mk(int[] nums){
@@ -130,4 +130,49 @@ public class Quiz03 {
         return ans;
     }
 
+
+    private static List<List<Integer>> m2(int[] nums){
+        List<List<Integer>> resList = new ArrayList<>();
+
+        if (nums == null || nums.length < 3){
+            return resList;
+        }
+
+        Arrays.sort(nums);
+
+        int len = nums.length;
+        for (int i = 0 ; i < len ; i++){
+
+            if (nums[i] > 0){
+                break;
+            }
+
+            if (i > 0 && nums[i] == nums[i - 1]){
+                continue;
+            }
+            int left = i + 1;
+            int right = len - 1;
+            while (left < right){
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum == 0){
+                    resList.add(Arrays.asList(nums[i],nums[left],nums[right]) );
+                    while (left < right && nums[left] == nums[left + 1]){
+                        left++;
+                    }
+                    while (left < right && nums[right] == nums[right - 1]){
+                        right--;
+                    }
+                    left++;
+                    right--;
+                }else if (sum < 0){
+                    left++;
+                }else if (sum > 0){
+                    right--;
+                }
+            }
+
+        }
+
+        return resList;
+    }
 }
